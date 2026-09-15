@@ -7,6 +7,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-15
+
 ### Added
 
 - Modular Bootstrap JavaScript component imports.
@@ -31,5 +33,6 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/nmorajda/grav-theme-basalt/releases/tag/v0.1.0
