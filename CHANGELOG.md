@@ -7,6 +7,17 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Modular Bootstrap JavaScript component imports.
+- Dismissible Bootstrap alert support.
+- Documentation for matching Bootstrap SCSS and JavaScript components.
+- Tracked placeholder files for the documented SCSS directory structure.
+
+### Changed
+
+- Enabled Bootstrap transitions, alerts and close button styles.
+
 ## [0.1.0] - 2026-09-15
 
 ### Added

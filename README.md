@@ -6,15 +6,15 @@ Basalt is a modular Bootstrap 5 base theme for Grav 2. It provides a minimal
 foundation for building custom Grav themes without requiring the complete
 Bootstrap CSS and JavaScript bundle.
 
-> Basalt is currently in early development. Version `0.1.0` provides the
-> development environment, modular Bootstrap imports, asset compilation and
-> minimal Twig templates.
+> Basalt is currently in early development. Its structure and public API may
+> change before version `1.0.0`.
 
 ## Features
 
 - Grav 2 and PHP 8.3+ support
 - Bootstrap 5 installed from npm
 - selectable Bootstrap SCSS components
+- selectable Bootstrap JavaScript components
 - custom SCSS architecture
 - JavaScript bundling with esbuild
 - Gulp development and production tasks
@@ -92,9 +92,11 @@ Bootstrap components are selected in:
 src/scss/_bootstrap-components.scss
 ```
 
-Only the required imports need to remain enabled. For example, the initial
-Basalt configuration includes Bootstrap containers and grid without compiling
-every Bootstrap component.
+Only the required imports should remain enabled.
+
+The default configuration includes Bootstrap base styles, containers, grid,
+visually hidden helpers and dismissible alert styles without compiling every
+Bootstrap component.
 
 Bootstrap variables can be overridden before Bootstrap components are loaded.
 Place Basalt and Bootstrap overrides in:
@@ -116,19 +118,53 @@ src/scss/utilities/
 
 ## Modular Bootstrap JavaScript
 
-The JavaScript entry file is:
+The main JavaScript entry file is:
 
 ```text
 src/js/script.js
 ```
 
-Bootstrap JavaScript components can be imported individually when required:
+Bootstrap JavaScript components are selected in:
 
-```js
-import Collapse from "bootstrap/js/dist/collapse";
+```text
+src/js/modules/bootstrap.js
 ```
 
-The source is bundled by esbuild into `dist/js/script.js`.
+Only the required component imports should remain enabled:
+
+```js
+import "bootstrap/js/dist/alert";
+
+// import "bootstrap/js/dist/collapse";
+// import "bootstrap/js/dist/dropdown";
+// import "bootstrap/js/dist/modal";
+```
+
+When enabling a JavaScript component, make sure its corresponding SCSS imports
+are also enabled in `src/scss/_bootstrap-components.scss`.
+
+For example, dismissible alerts require:
+
+```scss
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/close";
+```
+
+and:
+
+```js
+import "bootstrap/js/dist/alert";
+```
+
+Dropdowns, popovers and tooltips additionally require Popper.
+
+The selected Bootstrap modules and custom JavaScript are bundled by esbuild
+into a single `dist/js/script.js` file.
+
+See the
+[Bootstrap optimization guide](https://getbootstrap.com/docs/5.3/customize/optimize/)
+for more information about selective JavaScript imports.
 
 ## Theme inheritance
 
@@ -145,11 +181,26 @@ multiple projects.
 basalt/
 ├── dist/
 │   ├── css/
+│   │   └── style.css
 │   └── js/
+│       └── script.js
 ├── images/
+│   └── logo.png
 ├── src/
 │   ├── js/
+│   │   ├── modules/
+│   │   │   └── bootstrap.js
+│   │   └── script.js
 │   └── scss/
+│       ├── base/
+│       ├── components/
+│       ├── layout/
+│       ├── settings/
+│       ├── tools/
+│       ├── utilities/
+│       ├── _basalt.scss
+│       ├── _bootstrap-components.scss
+│       └── style.scss
 ├── templates/
 │   └── partials/
 ├── basalt.php
