@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e('html_attr') }}" class="no-js">
+<head>
+{% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {%- if header.title -%}
+            {{ header.title|e }} |
+        {%- endif -%}
+        {{ site.title|e }}
+    </title>
+
+    {% include 'partials/metadata.html.twig' %}
+
+    <link rel="canonical" href="{{ page.canonical(true)|e('html_attr') }}">
+{% endblock %}
+
+{% block stylesheets %}
+    {% do assets.addCss('theme://dist/css/style.css', 100) %}
+{% endblock %}
+
+{% block javascripts %}
+    {% do assets.addJs('theme://dist/js/script.js', {
+        group: 'bottom',
+        priority: 100
+    }) %}
+{% endblock %}
+
+{% block assets deferred %}
+    {{ assets.css()|raw }}
+    {{ assets.js()|raw }}
+{% endblock %}
+</head>
+
+<body class="{{ page.header.body_classes|e('html_attr') }}">
+    <a class="visually-hidden-focusable" href="#main-content">
+        Skip to main content
+    </a>
+
+    <header class="site-header">
+        <div class="container">
+            <a href="{{ home_url|e('html_attr') }}">
+                {{ site.title|e }}
+            </a>
+        </div>
+    </header>
+
+    <main id="main-content" class="site-main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+{% block bottom %}
+    {{ assets.js('bottom')|raw }}
+{% endblock %}
+</body>
+</html>

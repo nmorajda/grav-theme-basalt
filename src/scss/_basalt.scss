@@ -1,0 +1,23 @@
+// Bootstrap prerequisites
+
+@import "bootstrap/scss/functions";
+
+// Basalt and Bootstrap variable overrides
+
+@import "settings/variables";
+
+// Bootstrap configuration
+
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Selected Bootstrap components
+
+@import "bootstrap-components";
+
+// Basalt base styles
+
+@import "base/document";

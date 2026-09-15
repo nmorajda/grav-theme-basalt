@@ -1,0 +1,11 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block content %}
+    <article class="error-page" aria-labelledby="error-title">
+        <h1 id="error-title">{{ page.title|e }}</h1>
+
+        <div class="error-page__content">
+            {{ page.content|raw }}
+        </div>
+    </article>
+{% endblock %}

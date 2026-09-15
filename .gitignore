@@ -1,0 +1,13 @@
+# Node dependencies
+node_modules/
+
+# Development source maps
+dist/**/*.map
+
+# Logs
+*.log
+npm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db

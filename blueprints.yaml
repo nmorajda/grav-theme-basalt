@@ -1,0 +1,25 @@
+name: Basalt
+slug: basalt
+type: theme
+version: 0.1.0
+description: A modular Bootstrap 5 base theme for Grav 2
+icon: cube
+
+author:
+  name: Norbert Morajda
+  email: n.morajda@abmstudio.pl
+  url: https://abmstudio.pl
+
+homepage: https://github.com/nmorajda/grav-theme-basalt
+bugs: https://github.com/nmorajda/grav-theme-basalt/issues
+readme: https://github.com/nmorajda/grav-theme-basalt/blob/master/README.md
+license: MIT
+
+keywords: grav, theme, bootstrap, bootstrap5, scss, gulp, base-theme, accessibility
+
+compatibility:
+  grav: ['2.0']
+
+dependencies:
+  - name: grav
+    version: '>=2.0.0'
