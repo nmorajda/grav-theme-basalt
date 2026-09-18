@@ -1,0 +1,11 @@
+en:
+  THEME_BASALT:
+    SKIP_LINK: Skip to main content
+    ARIA:
+      PRIMARY_NAVIGATION: Primary navigation
+
+pl:
+  THEME_BASALT:
+    SKIP_LINK: Przejdź do treści głównej
+    ARIA:
+      PRIMARY_NAVIGATION: Nawigacja główna

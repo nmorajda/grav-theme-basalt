@@ -1,0 +1,9 @@
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="site-brand" href="{{ home_url|e('html_attr') }}">
+            <span class="site-brand__name">{{ site.title|e }}</span>
+        </a>
+
+        {% include 'partials/navigation.html.twig' %}
+    </div>
+</header>

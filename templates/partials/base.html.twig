@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e('html_attr') }}" class="no-js">
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang ?: 'en')|e('html_attr') }}" class="no-js">
 <head>
 {% block head %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block metadata %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>
-        {%- if header.title -%}
-            {{ header.title|e }} |
-        {%- endif -%}
-        {{ site.title|e }}
-    </title>
+        {% include 'partials/metadata.html.twig' %}
+    {% endblock %}
 
-    {% include 'partials/metadata.html.twig' %}
+    {% block title %}
+        <title>
+            {%- if header.title -%}
+                {{ header.title|e }} |
+            {%- endif -%}
+            {{ site.title|e }}
+        </title>
+    {% endblock %}
 
-    <link rel="canonical" href="{{ page.canonical(true)|e('html_attr') }}">
+    {% block canonical %}
+        <link rel="canonical" href="{{ page.canonical(true)|e('html_attr') }}">
+    {% endblock %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -35,23 +41,29 @@
 </head>
 
 <body class="{{ page.header.body_classes|e('html_attr') }}">
-    <a class="visually-hidden-focusable" href="#main-content">
-        Skip to main content
-    </a>
+{% block body %}
+    {% block skip_link %}
+        <a class="visually-hidden-focusable" href="#main-content">
+            {{ 'THEME_BASALT.SKIP_LINK'|t|e }}
+        </a>
+    {% endblock %}
 
-    <header class="site-header">
-        <div class="container">
-            <a href="{{ home_url|e('html_attr') }}">
-                {{ site.title|e }}
-            </a>
-        </div>
-    </header>
+    {% block header %}
+        {% include 'partials/header.html.twig' %}
+    {% endblock %}
 
-    <main id="main-content" class="site-main">
-        <div class="container">
-            {% block content %}{% endblock %}
-        </div>
-    </main>
+    {% block main %}
+        <main id="main-content" class="site-main" tabindex="-1">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    {% endblock %}
+
+    {% block footer %}
+        {% include 'partials/footer.html.twig' %}
+    {% endblock %}
+{% endblock %}
 
 {% block bottom %}
     {{ assets.js('bottom')|raw }}
