@@ -2,9 +2,9 @@
 
 ![Basalt theme preview](screenshot.jpg)
 
-Basalt is a modular Bootstrap 5 base theme for Grav 2. It provides a minimal
-foundation for building custom Grav themes without requiring the complete
-Bootstrap CSS and JavaScript bundle.
+Basalt is a modular Bootstrap 5 parent theme for Grav 2. It provides a minimal
+foundation for building project-specific child themes without including the
+complete Bootstrap CSS and JavaScript bundles.
 
 > Basalt is currently in early development. Its structure and public API may
 > change before version `1.0.0`.
@@ -22,7 +22,8 @@ Bootstrap CSS and JavaScript bundle.
 - minified production assets
 - Node.js version pinned with `.nvmrc`
 - compiled assets included in `dist`
-- foundation for inherited Grav themes
+- explicit support for Grav child themes
+- stable `@basalt` Twig namespace
 
 ## Requirements
 
@@ -46,7 +47,7 @@ cd user/themes
 git clone git@github.com:nmorajda/grav-theme-basalt.git basalt
 ```
 
-Activate the theme in the Grav Admin panel or set it in your Grav configuration:
+Activate the theme in the Grav Admin panel or set it in the Grav configuration:
 
 ```yaml
 pages:
@@ -105,6 +106,8 @@ Place Basalt and Bootstrap overrides in:
 src/scss/settings/_variables.scss
 ```
 
+Variables intended as extension points should use `!default`.
+
 Custom theme styles are organized under:
 
 ```text
@@ -162,18 +165,140 @@ Dropdowns, popovers and tooltips additionally require Popper.
 The selected Bootstrap modules and custom JavaScript are bundled by esbuild
 into a single `dist/js/script.js` file.
 
-See the
-[Bootstrap optimization guide](https://getbootstrap.com/docs/5.3/customize/optimize/)
+See the [Bootstrap optimization guide](https://getbootstrap.com/docs/5.3/customize/optimize/)
 for more information about selective JavaScript imports.
 
 ## Theme inheritance
 
-Basalt is intended to serve as a reusable parent theme. Project-specific Grav
-themes can inherit its templates and assets while providing their own Twig
-templates, SCSS variables, components and branding.
+Basalt is intended to be used as a reusable parent theme. Each website can use
+a project-specific child theme for its branding, templates and custom assets.
 
-This keeps the Bootstrap foundation and build environment reusable across
-multiple projects.
+A child theme stream should search the child first and Basalt second:
+
+```yaml
+streams:
+  schemes:
+    theme:
+      type: ReadOnlyStream
+      prefixes:
+        '':
+          - user://themes/basalt-child
+          - user://themes/basalt
+
+enabled: true
+```
+
+The child theme class extends Basalt:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Grav\Theme;
+
+class BasaltChild extends Basalt
+{
+}
+```
+
+The child theme blueprint should declare Basalt as a dependency:
+
+```yaml
+dependencies:
+  - name: grav
+    version: '>=2.0.0'
+  - name: basalt
+    version: '>=0.3.0'
+```
+
+### Extending parent templates
+
+Basalt registers its templates under the `@basalt` Twig namespace. A child base
+template can therefore explicitly extend the parent:
+
+```twig
+{% extends '@basalt/partials/base.html.twig' %}
+```
+
+Use `parent()` when extending asset blocks:
+
+```twig
+{% extends '@basalt/partials/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% do assets.addCss('theme://dist/css/child.css', 90) %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% do assets.addJs('theme://dist/js/child.js', {
+        group: 'bottom',
+        priority: 90
+    }) %}
+{% endblock %}
+```
+
+A template with the same path in the child theme overrides the corresponding
+parent template. Templates that are fully overridden do not automatically
+receive later changes made to the parent version.
+
+### Child theme assets
+
+The recommended additive asset names are:
+
+```text
+dist/css/child.css
+dist/js/child.js
+```
+
+Basalt registers its assets with priority `100`. Child assets use priority `90`,
+so they are rendered afterwards and can override parent styles.
+
+Creating a file in the child theme with the same path as a Basalt asset replaces
+the parent asset completely:
+
+```text
+dist/css/style.css
+dist/js/script.js
+```
+
+Use identical paths only when complete replacement is intentional. In normal
+child themes, use `child.css` and `child.js`.
+
+The Grav Asset Pipeline can combine the final parent, child and plugin assets.
+It does not compile SCSS or bundle JavaScript modules, so it does not replace
+the Gulp and esbuild workflow.
+
+For development, keeping the Grav pipelines disabled makes individual assets
+and source maps easier to inspect. They can be enabled in production to reduce
+the number of requests.
+
+### Bootstrap components in child themes
+
+Basalt owns the Bootstrap installation, Sass configuration and component
+selection. Child themes should not compile a second copy of Bootstrap by
+default.
+
+CSS custom properties exposed by Bootstrap or Basalt can be overridden in
+`child.css`. Sass variables cannot change Bootstrap code that has already been
+compiled into the parent `style.css`.
+
+When another generally useful Bootstrap component is required, add its SCSS and
+JavaScript imports to Basalt and release a new Basalt version. Project-specific
+styles and scripts remain in the child theme.
+
+## Updating Basalt
+
+Updating the parent theme does not overwrite files stored in the child theme.
+
+Changes to parent templates are inherited unless the child theme completely
+overrides the same template. After updating Basalt, review overridden templates
+for upstream changes and test the child theme against the required Basalt
+version declared in its blueprint.
 
 ## Project structure
 
@@ -202,7 +327,10 @@ basalt/
 │       ├── _bootstrap-components.scss
 │       └── style.scss
 ├── templates/
-│   └── partials/
+│   ├── partials/
+│   │   └── base.html.twig
+│   ├── default.html.twig
+│   └── error.html.twig
 ├── basalt.php
 ├── basalt.yaml
 ├── blueprints.yaml
