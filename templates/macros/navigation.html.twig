@@ -1,0 +1,54 @@
+{% macro render(items, dropdown_enabled) %}
+    {% for item in items %}
+        {% set children = item.children.visible %}
+        {% set has_children = dropdown_enabled and children.count > 0 %}
+        {% set active = item.active or item.activeChild %}
+
+        {% if has_children %}
+            <li class="nav-item dropdown">
+                <button
+                    id="navigation-dropdown-{{ item.slug|e('html_attr') }}"
+                    class="nav-link dropdown-toggle{{ active ? ' active' : '' }}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    {{ item.menu|e }}
+                </button>
+
+                <ul
+                    class="dropdown-menu"
+                    aria-labelledby="navigation-dropdown-{{ item.slug|e('html_attr') }}"
+                >
+                    {% for child in children %}
+                        {% set child_active = child.active or child.activeChild %}
+
+                        <li>
+                            <a
+                                class="dropdown-item{{ child_active ? ' active' : '' }}"
+                                href="{{ child.url|e('html_attr') }}"
+                                {% if child.active %}
+                                    aria-current="page"
+                                {% endif %}
+                            >
+                                {{ child.menu|e }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a
+                    class="nav-link{{ active ? ' active' : '' }}"
+                    href="{{ item.url|e('html_attr') }}"
+                    {% if item.active %}
+                        aria-current="page"
+                    {% endif %}
+                >
+                    {{ item.menu|e }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

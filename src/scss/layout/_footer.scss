@@ -1,0 +1,9 @@
+.site-footer {
+    flex: 0 0 auto;
+    padding-block: var(--basalt-layout-spacing);
+    border-top: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.site-footer__copyright {
+    margin: 0;
+}

@@ -1,12 +1,16 @@
+:root {
+    --basalt-layout-spacing: #{$basalt-layout-spacing};
+    --basalt-layout-gap: #{$basalt-layout-gap};
+    --basalt-navigation-gap: #{$basalt-navigation-gap};
+    --basalt-navigation-indent: #{$basalt-navigation-indent};
+}
+
 html {
     min-height: 100%;
 }
 
 body {
+    display: flex;
     min-height: 100vh;
-}
-
-.site-header,
-.site-main {
-    padding-block: $basalt-layout-spacing;
+    flex-direction: column;
 }
