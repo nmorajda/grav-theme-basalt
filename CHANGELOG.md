@@ -7,6 +7,29 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Extensible header, navigation, main content and footer partials.
+- Base layout SCSS modules with configurable spacing variables.
+- Responsive Bootstrap navbar with accessible collapse controls.
+- Navigation macro with configurable dropdown support.
+- Active navigation states and `aria-current` attributes.
+- Theme translations for navigation and accessibility labels.
+- Optional Bootstrap Icons integration.
+- Separate compiled Bootstrap Icons stylesheet and local font assets.
+- Build task for copying WOFF and WOFF2 font files.
+- Source directory for self-hosted fonts.
+- Typography hooks for body and heading font families.
+- Empty `font_stylesheets` Twig block for optional external font services.
+- Documentation for system, self-hosted and externally hosted fonts.
+
+### Changed
+
+- Refactored the base template into extensible Twig blocks and partials.
+- Expanded the default and error templates to use the shared layout.
+- Enabled the Bootstrap SCSS and JavaScript components required by navigation.
+- Updated the documented project structure.
+
 ## [0.3.0] - 2026-09-18
 
 ### Added

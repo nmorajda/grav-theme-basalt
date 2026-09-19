@@ -24,6 +24,7 @@
     },
     "devDependencies": {
         "autoprefixer": "10.6.0",
+        "bootstrap-icons": "1.13.1",
         "esbuild": "0.28.2",
         "gulp": "5.0.1",
         "gulp-clean-css": "4.3.0",

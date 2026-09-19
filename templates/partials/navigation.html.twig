@@ -1,6 +1,7 @@
 {% import 'macros/navigation.html.twig' as navigation %}
 
 {% set dropdown_enabled = config.theme.dropdown.enabled ?? true %}
+{% set icons_enabled = config.theme.icons.enabled ?? true %}
 
 <nav
     class="navbar navbar-expand-lg"
@@ -27,7 +28,8 @@
             <ul class="navbar-nav">
                 {{ navigation.render(
                     pages.children.visible,
-                    dropdown_enabled
+                    dropdown_enabled,
+                    icons_enabled
                 ) }}
             </ul>
         </div>

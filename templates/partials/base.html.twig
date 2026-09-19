@@ -24,7 +24,13 @@
 {% endblock %}
 
 {% block stylesheets %}
+    {% block font_stylesheets %}{% endblock %}
+
     {% do assets.addCss('theme://dist/css/style.css', 100) %}
+
+    {% if config.theme.icons.enabled ?? true %}
+        {% do assets.addCss('theme://dist/css/icons.css', 90) %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

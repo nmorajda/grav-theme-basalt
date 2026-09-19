@@ -24,6 +24,8 @@ complete Bootstrap CSS and JavaScript bundles.
 - compiled assets included in `dist`
 - explicit support for Grav child themes
 - stable `@basalt` Twig namespace
+- system font stack with configurable typography hooks
+- support for self-hosted and optional external fonts
 
 ## Requirements
 
@@ -118,6 +120,199 @@ src/scss/settings/
 src/scss/tools/
 src/scss/utilities/
 ```
+
+## Typography and fonts
+
+Basalt uses Bootstrap's system font stack by default. It does not download any
+text fonts from external services, so the default configuration requires no
+additional network requests.
+
+The actual font depends on the visitor's operating system and may be Segoe UI,
+the Apple system font, Roboto, Noto Sans, Liberation Sans or another locally
+available sans-serif font.
+
+Basalt exposes two CSS custom properties:
+
+```css
+--basalt-font-family-base
+--basalt-font-family-headings
+```
+
+Their default values are defined in:
+
+```text
+src/scss/base/_fonts.scss
+```
+
+The base font is also connected to Bootstrap's body font property:
+
+```scss
+:root {
+    --basalt-font-family-base: var(--bs-font-sans-serif);
+    --basalt-font-family-headings: var(--basalt-font-family-base);
+    --bs-body-font-family: var(--basalt-font-family-base);
+}
+```
+
+This allows child themes to change body and heading typography without
+recompiling the parent theme.
+
+### Self-hosted fonts
+
+Self-hosted fonts are recommended when consistent typography is required.
+They avoid requests to third-party font services and provide greater control
+over privacy, caching and availability.
+
+Before including a font, make sure its license permits web embedding and
+distribution.
+
+Basalt provides the following source directory for locally hosted fonts:
+
+```text
+src/fonts/
+```
+
+During the build, Gulp copies `woff` and `woff2` files to:
+
+```text
+dist/fonts/
+```
+
+Subdirectories are preserved. For example:
+
+```text
+src/fonts/inter/InterVariable.woff2
+src/fonts/inter/InterVariable-Italic.woff2
+```
+
+are copied to:
+
+```text
+dist/fonts/inter/InterVariable.woff2
+dist/fonts/inter/InterVariable-Italic.woff2
+```
+
+A variable font can be registered in SCSS as follows:
+
+```scss
+@font-face {
+    font-family: "Inter";
+    src: url("../fonts/inter/InterVariable.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("../fonts/inter/InterVariable-Italic.woff2") format("woff2");
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+:root {
+    --basalt-font-family-base: "Inter", var(--bs-font-sans-serif);
+    --basalt-font-family-headings: "Inter", var(--bs-font-sans-serif);
+}
+```
+
+The font URLs are relative to the generated `dist/css/style.css` file.
+
+For static fonts, create a separate `@font-face` declaration for every required
+weight and style:
+
+```scss
+@font-face {
+    font-family: "Example Sans";
+    src: url("../fonts/example-sans/ExampleSans-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Example Sans";
+    src: url("../fonts/example-sans/ExampleSans-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+```
+
+WOFF2 is the recommended format for modern browsers. WOFF remains supported by
+the build process for projects that require additional legacy compatibility.
+TTF, OTF and EOT files are not copied by default.
+
+Only include the weights, styles and character subsets that are actually used.
+This reduces the amount of data downloaded by visitors.
+
+After adding or changing fonts, rebuild the production assets:
+
+```bash
+npm run build
+```
+
+Basalt does not include a text font in the repository. Bootstrap Icons are
+handled separately and are copied to `dist/fonts` by the same build process.
+
+### Fonts in child themes
+
+A child theme can override the Basalt typography properties in its own CSS:
+
+```css
+:root {
+    --basalt-font-family-base: "Example Sans", var(--bs-font-sans-serif);
+    --basalt-font-family-headings: "Example Sans", var(--bs-font-sans-serif);
+}
+```
+
+A child theme that self-hosts fonts should keep them in its own source directory
+and copy them to its own `dist/fonts` directory. The Basalt build process only
+processes files belonging to Basalt and does not build assets stored in sibling
+child themes.
+
+The child stylesheet can then reference its own generated font files:
+
+```css
+@font-face {
+    font-family: "Example Sans";
+    src: url("../fonts/example-sans/ExampleSans-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+```
+
+### External font services
+
+The parent base template provides an empty `font_stylesheets` block. A child
+theme can override it when an external font service is intentionally required:
+
+```twig
+{% extends '@basalt/partials/base.html.twig' %}
+
+{% block font_stylesheets %}
+    {% do assets.addCss(
+        'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap',
+        110
+    ) %}
+{% endblock %}
+```
+
+The selected family must also be assigned in the child stylesheet:
+
+```css
+:root {
+    --basalt-font-family-base: "Inter", var(--bs-font-sans-serif);
+    --basalt-font-family-headings: "Inter", var(--bs-font-sans-serif);
+}
+```
+
+External font services create requests to third-party servers and may require
+additional privacy, consent and Content Security Policy considerations.
+Self-hosting is therefore the recommended approach for privacy-sensitive
+projects.
 
 ## Modular Bootstrap JavaScript
 
@@ -306,37 +501,60 @@ version declared in its blueprint.
 basalt/
 ├── dist/
 │   ├── css/
+│   │   ├── icons.css
 │   │   └── style.css
+│   ├── fonts/
+│   │   ├── bootstrap-icons.woff
+│   │   └── bootstrap-icons.woff2
 │   └── js/
 │       └── script.js
 ├── images/
 │   └── logo.png
 ├── src/
+│   ├── fonts/
 │   ├── js/
 │   │   ├── modules/
 │   │   │   └── bootstrap.js
 │   │   └── script.js
 │   └── scss/
 │       ├── base/
+│       │   ├── _document.scss
+│       │   └── _fonts.scss
 │       ├── components/
 │       ├── layout/
+│       │   ├── _footer.scss
+│       │   ├── _header.scss
+│       │   ├── _main.scss
+│       │   └── _navigation.scss
 │       ├── settings/
+│       │   └── _variables.scss
 │       ├── tools/
 │       ├── utilities/
 │       ├── _basalt.scss
 │       ├── _bootstrap-components.scss
+│       ├── icons.scss
 │       └── style.scss
 ├── templates/
+│   ├── macros/
+│   │   └── navigation.html.twig
 │   ├── partials/
-│   │   └── base.html.twig
+│   │   ├── base.html.twig
+│   │   ├── footer.html.twig
+│   │   ├── header.html.twig
+│   │   └── navigation.html.twig
 │   ├── default.html.twig
 │   └── error.html.twig
 ├── basalt.php
 ├── basalt.yaml
 ├── blueprints.yaml
+├── CHANGELOG.md
 ├── gulpfile.js
+├── languages.yaml
+├── LICENSE
 ├── package.json
-└── README.md
+├── README.md
+├── screenshot.jpg
+└── thumbnail.png
 ```
 
 ## Production assets

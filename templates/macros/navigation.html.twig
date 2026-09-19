@@ -1,4 +1,13 @@
-{% macro render(items, dropdown_enabled) %}
+{% macro icon(name, icons_enabled) %}
+    {% if icons_enabled and name %}
+        <i
+            class="navigation-icon bi bi-{{ name|e('html_attr') }}"
+            aria-hidden="true"
+        ></i>
+    {% endif %}
+{% endmacro %}
+
+{% macro render(items, dropdown_enabled, icons_enabled) %}
     {% for item in items %}
         {% set children = item.children.visible %}
         {% set has_children = dropdown_enabled and children.count > 0 %}
@@ -13,7 +22,8 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
-                    {{ item.menu|e }}
+                    {{ _self.icon(item.header.icon, icons_enabled) }}
+                    <span>{{ item.menu|e }}</span>
                 </button>
 
                 <ul
@@ -31,7 +41,11 @@
                                     aria-current="page"
                                 {% endif %}
                             >
-                                {{ child.menu|e }}
+                                {{ _self.icon(
+                                    child.header.icon,
+                                    icons_enabled
+                                ) }}
+                                <span>{{ child.menu|e }}</span>
                             </a>
                         </li>
                     {% endfor %}
@@ -46,7 +60,8 @@
                         aria-current="page"
                     {% endif %}
                 >
-                    {{ item.menu|e }}
+                    {{ _self.icon(item.header.icon, icons_enabled) }}
+                    <span>{{ item.menu|e }}</span>
                 </a>
             </li>
         {% endif %}

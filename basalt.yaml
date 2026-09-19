@@ -2,3 +2,6 @@ enabled: true
 
 dropdown:
   enabled: true
+
+icons:
+  enabled: true
