@@ -363,6 +363,139 @@ into a single `dist/js/script.js` file.
 See the [Bootstrap optimization guide](https://getbootstrap.com/docs/5.3/customize/optimize/)
 for more information about selective JavaScript imports.
 
+## Navigation and Bootstrap Icons
+
+Basalt provides a responsive Bootstrap navbar generated from visible Grav
+pages. The navigation template is located in:
+
+```text
+templates/partials/navigation.html.twig
+```
+
+Menu items are rendered by:
+
+```text
+templates/macros/navigation.html.twig
+```
+
+The responsive navigation uses the Bootstrap Collapse component. Dropdown
+menus additionally use the Bootstrap Dropdown component.
+
+### Navigation configuration
+
+Navigation options are configured in `basalt.yaml`:
+
+```yaml
+dropdown:
+  enabled: true
+
+icons:
+  enabled: true
+```
+
+Both options can also be changed from the Grav Admin theme configuration.
+
+When `dropdown.enabled` is enabled, a top-level page with visible children is
+rendered as a dropdown label. The label is a button that opens the submenu and
+is not a link to the parent page.
+
+When dropdown navigation is disabled, top-level pages are rendered as regular
+links and their children are not included in the main navigation.
+
+The default navigation supports one dropdown level. More complex navigation
+structures can be implemented by overriding the navigation macro in a child
+theme.
+
+### Menu icons
+
+Basalt includes [Bootstrap Icons](https://icons.getbootstrap.com/) as a local
+npm dependency. The icon stylesheet and font files are generated into:
+
+```text
+dist/css/icons.css
+dist/fonts/bootstrap-icons.woff
+dist/fonts/bootstrap-icons.woff2
+```
+
+No external icon service or CDN request is required.
+
+An icon can be assigned to a page in its Markdown front matter:
+
+```yaml
+---
+title: Home
+menu: Home
+icon: house
+---
+```
+
+Use the Bootstrap Icon name without the `bi-` prefix. For example:
+
+```yaml
+icon: house
+icon: person
+icon: envelope
+icon: gear
+```
+
+The navigation macro converts `icon: house` into:
+
+```html
+<i class="navigation-icon bi bi-house" aria-hidden="true"></i>
+```
+
+Icons added to navigation labels are decorative. The visible page label
+remains available to assistive technologies.
+
+### Using icons in templates and content
+
+Bootstrap Icons can also be used directly in Twig templates or HTML content:
+
+```html
+<i class="bi bi-check-lg" aria-hidden="true"></i>
+```
+
+When an icon is used next to visible text, it should normally be hidden from
+assistive technologies with `aria-hidden="true"`.
+
+An icon-only control must have an accessible name:
+
+```html
+<button type="button" class="btn btn-primary" aria-label="Save">
+    <i class="bi bi-check-lg" aria-hidden="true"></i>
+</button>
+```
+
+Alternatively, provide visually hidden text:
+
+```html
+<button type="button" class="btn btn-primary">
+    <i class="bi bi-check-lg" aria-hidden="true"></i>
+    <span class="visually-hidden">Save</span>
+</button>
+```
+
+Do not rely on an icon alone to communicate important information.
+
+### Disabling Bootstrap Icons
+
+Bootstrap Icons can be disabled in `basalt.yaml`:
+
+```yaml
+icons:
+  enabled: false
+```
+
+When disabled:
+
+- `dist/css/icons.css` is not added to the page;
+- navigation icon markup is not rendered;
+- the local font files remain in the installed package but are not requested
+  by the browser.
+
+A child theme can provide a different icon system by disabling Bootstrap Icons
+and overriding the relevant templates or macro.
+
 ## Theme inheritance
 
 Basalt is intended to be used as a reusable parent theme. Each website can use
