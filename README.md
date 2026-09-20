@@ -553,11 +553,52 @@ template can therefore explicitly extend the parent:
 {% extends '@basalt/partials/base.html.twig' %}
 ```
 
-The parent base template exposes a `theme_stylesheet` block that registers only
-`dist/css/style.css`. A child theme can override this narrow block to register
-an alternative compiled stylesheet without duplicating the surrounding asset
-logic. The optional `icons.css` remains outside this block and continues to be
-handled by the parent `stylesheets` block.
+### Public Twig API
+
+The following blocks are the stable public Twig API for child themes in Basalt
+0.5.0:
+
+| Block | Defined in | Purpose | Call `parent()`? | Override model |
+| --- | --- | --- | --- | --- |
+| `title` | `templates/partials/base.html.twig` | Renders the complete document title element. | No when replacing the title. | Full replacement. |
+| `font_stylesheets` | `templates/partials/base.html.twig` | Registers font stylesheets before the main theme stylesheet. | Not required; the parent block is empty. | Add font assets. |
+| `theme_stylesheet` | `templates/partials/base.html.twig` | Selects and registers one main theme stylesheet. | No; the child selects the replacement stylesheet. | Full replacement of the main stylesheet selection. |
+| `stylesheets` | `templates/partials/base.html.twig` | Registers font, main theme and optional icon stylesheets. | Yes, when preserving parent stylesheets. | Add stylesheet registrations around the parent output. |
+| `javascripts` | `templates/partials/base.html.twig` | Registers the parent JavaScript bundle in the `bottom` group. | Yes, when preserving parent scripts. | Add script registrations around the parent output. |
+| `header` | `templates/partials/base.html.twig` | Renders the document header through the public header partial. | Only when retaining the parent header. | Full replacement of the header region. |
+| `main` | `templates/partials/base.html.twig` | Renders the main element, container and page content block. | Only when retaining the parent main region. | Full replacement of the main region. |
+| `content` | `templates/partials/base.html.twig`, `templates/default.html.twig`, `templates/error.html.twig` | Renders content defined by the current page template. | Only when extending that page type's existing content. | Page-type-dependent full replacement. |
+| `footer` | `templates/partials/base.html.twig` | Renders the document footer through the public footer partial. | Only when retaining the parent footer. | Full replacement of the footer region. |
+| `bottom` | `templates/partials/base.html.twig` | Renders the final `bottom` JavaScript asset group before `</body>`. | Yes. | Add content while preserving final script output. |
+
+The narrow `theme_stylesheet` block registers `dist/css/style.css` by default.
+A child can replace it without `parent()` to select an alternative compiled
+stylesheet without duplicating the surrounding asset logic. The optional
+`icons.css` remains outside this block and is handled by `stylesheets` in both
+cases.
+
+Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
+`skip_link`, can technically be overridden. They are implementation details and
+are not part of the stable public Twig API for Basalt 0.5.0.
+
+The following partials are public override points for child themes:
+
+| Partial | Responsibility |
+| --- | --- |
+| `templates/partials/header.html.twig` | Renders the site header and includes the navigation partial. |
+| `templates/partials/navigation.html.twig` | Renders the responsive navbar and delegates menu items to the navigation macro. |
+| `templates/partials/footer.html.twig` | Renders the site footer. |
+
+The public navigation macro is defined in
+`templates/macros/navigation.html.twig` with this signature:
+
+```twig
+navigation.render(items, dropdown_enabled, icons_enabled)
+```
+
+It renders the supplied items according to the documented navigation contract
+and the dropdown and icon switches. The internal `navigation.icon()` helper is
+not part of the public API.
 
 Use `parent()` when extending asset blocks:
 
