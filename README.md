@@ -549,6 +549,12 @@ template can therefore explicitly extend the parent:
 {% extends '@basalt/partials/base.html.twig' %}
 ```
 
+The parent base template exposes a `theme_stylesheet` block that registers only
+`dist/css/style.css`. A child theme can override this narrow block to register
+an alternative compiled stylesheet without duplicating the surrounding asset
+logic. The optional `icons.css` remains outside this block and continues to be
+handled by the parent `stylesheets` block.
+
 Use `parent()` when extending asset blocks:
 
 ```twig
