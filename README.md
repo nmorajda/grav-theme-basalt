@@ -395,16 +395,20 @@ icons:
 
 Both options can also be changed from the Grav Admin theme configuration.
 
-When `dropdown.enabled` is enabled, a top-level page with visible children is
-rendered as a dropdown label. The label is a button that opens the submenu and
-is not a link to the parent page.
+### Navigation contract
 
-When dropdown navigation is disabled, top-level pages are rendered as regular
-links and their children are not included in the main navigation.
+- A regular navigation item is rendered as a link.
+- When `dropdown.enabled` is enabled, an item with visible children is rendered
+  only as a dropdown label and button, without an `href` attribute.
+- The submenu contains only the item's children; no additional Overview item is
+  generated.
+- The default navigation supports one submenu level.
+- When `dropdown.enabled` is disabled, the parent is rendered as a regular link
+  and its children are not displayed.
+- `icons.enabled` controls whether configured navigation icons are displayed.
 
-The default navigation supports one dropdown level. More complex navigation
-structures can be implemented by overriding the navigation macro in a child
-theme.
+More complex navigation structures can be implemented by overriding the
+navigation macro in a child theme.
 
 ### Menu icons
 
