@@ -7,6 +7,20 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-20
+
+### Added
+
+- Narrow public `theme_stylesheet` block for replacing the main stylesheet in child themes.
+- Public overridable `partials/brand.html.twig` component.
+- Documentation for the stable public Twig blocks, partials and navigation macro.
+
+### Changed
+
+- Stabilized the documented navigation contract for child themes.
+- Updated navigation ARIA labels to use the existing translation keys.
+- Documented parent stylesheet replacement for child-compiled CSS.
+
 ## [0.4.0] - 2026-09-19
 
 ### Added
@@ -66,7 +80,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.1.0...v0.2.0

@@ -541,7 +541,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.3.0'
+    version: '>=0.5.0'
 ```
 
 ### Extending parent templates
