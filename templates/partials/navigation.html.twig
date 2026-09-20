@@ -8,9 +8,7 @@
     aria-label="{{ 'THEME_BASALT.ARIA.PRIMARY_NAVIGATION'|t|e('html_attr') }}"
 >
     <div class="container">
-        <a class="navbar-brand" href="{{ home_url|e('html_attr') }}">
-            {{ site.title|e }}
-        </a>
+        {% include 'partials/brand.html.twig' %}
 
         <button
             class="navbar-toggler"

@@ -586,6 +586,7 @@ The following partials are public override points for child themes:
 | Partial | Responsibility |
 | --- | --- |
 | `templates/partials/header.html.twig` | Renders the site header and includes the navigation partial. |
+| `templates/partials/brand.html.twig` | Renders the home link with `site.title`; override it to provide a custom brand or logo. |
 | `templates/partials/navigation.html.twig` | Renders the responsive navbar and delegates menu items to the navigation macro. |
 | `templates/partials/footer.html.twig` | Renders the site footer. |
 
@@ -723,6 +724,7 @@ basalt/
 │   │   └── navigation.html.twig
 │   ├── partials/
 │   │   ├── base.html.twig
+│   │   ├── brand.html.twig
 │   │   ├── footer.html.twig
 │   │   ├── header.html.twig
 │   │   └── navigation.html.twig
