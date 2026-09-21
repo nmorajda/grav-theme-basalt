@@ -54,10 +54,12 @@
 
 <body class="{{ page.header.body_classes|e('html_attr') }}">
 {% block body %}
-    {% block skip_link %}
-        <a class="skip-link visually-hidden-focusable" href="#main-content">
-            {{ 'THEME_BASALT.SKIP_LINK'|t|e }}
-        </a>
+    {% block skip_links %}
+        {% block skip_link %}
+            <a class="skip-link visually-hidden-focusable" href="#main-content">
+                {{ 'THEME_BASALT.SKIP_LINK'|t|e }}
+            </a>
+        {% endblock %}
     {% endblock %}
 
     {% block header %}

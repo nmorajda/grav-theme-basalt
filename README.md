@@ -566,6 +566,7 @@ The following blocks are the stable public Twig API for child themes in Basalt
 | `theme_stylesheet` | `templates/partials/base.html.twig` | Selects and registers one main theme stylesheet. | No; the child selects the replacement stylesheet. | Full replacement of the main stylesheet selection. |
 | `stylesheets` | `templates/partials/base.html.twig` | Registers font, main theme and optional icon stylesheets. | Yes, when preserving parent stylesheets. | Add stylesheet registrations around the parent output. |
 | `javascripts` | `templates/partials/base.html.twig` | Registers the parent JavaScript bundle in the `bottom` group. | Yes, when preserving parent scripts. | Add script registrations around the parent output. |
+| `skip_links` | `templates/partials/base.html.twig` | Renders the required main-content skip link and provides an extension point for additional skip links. | Yes, when adding links; not when providing an equivalent complete collection. | Extend the parent output or replace the collection while preserving a link to `#main-content`. |
 | `header` | `templates/partials/base.html.twig` | Renders the document header through the public header partial. | Only when retaining the parent header. | Full replacement of the header region. |
 | `main` | `templates/partials/base.html.twig` | Renders the main element, container and page content block. | Only when retaining the parent main region. | Full replacement of the main region. |
 | `content` | `templates/partials/base.html.twig`, `templates/default.html.twig`, `templates/error.html.twig` | Renders content defined by the current page template. | Only when extending that page type's existing content. | Page-type-dependent full replacement. |
@@ -587,6 +588,10 @@ cases.
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
 are not part of the stable public Twig API for Basalt 0.6.0.
+
+A child can extend the public `skip_links` block and call `parent()` to retain
+the default link to `#main-content` while adding links to other landmarks. A
+full replacement must still provide an equivalent link to `#main-content`.
 
 A child that replaces the public `main` block must preserve both
 `id="main-content"` and `tabindex="-1"` on its main content target. The skip link
