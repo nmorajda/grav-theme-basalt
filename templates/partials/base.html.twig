@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang ?: 'en')|e('html_attr') }}" class="no-js">
+{% set document_language = grav.language.getActive ?: grav.config.site.default_lang ?: 'en' %}
+{% set document_direction = language_codes.getOrientation(document_language) ?: 'ltr' %}
+<html lang="{{ document_language|e('html_attr') }}" dir="{{ document_direction|e('html_attr') }}" class="no-js">
 <head>
 {% block head %}
     {% block metadata %}
@@ -46,12 +48,14 @@
     {{ assets.css()|raw }}
     {{ assets.js()|raw }}
 {% endblock %}
+
+{% block head_extra %}{% endblock %}
 </head>
 
 <body class="{{ page.header.body_classes|e('html_attr') }}">
 {% block body %}
     {% block skip_link %}
-        <a class="visually-hidden-focusable" href="#main-content">
+        <a class="skip-link visually-hidden-focusable" href="#main-content">
             {{ 'THEME_BASALT.SKIP_LINK'|t|e }}
         </a>
     {% endblock %}

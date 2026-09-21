@@ -556,11 +556,12 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.5.0:
+0.6.0:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
 | `title` | `templates/partials/base.html.twig` | Renders the complete document title element. | No when replacing the title. | Full replacement. |
+| `head_extra` | `templates/partials/base.html.twig` | Provides an empty extension point at the end of the document head. | Not required; the parent block is empty. | Add child-specific head elements. |
 | `font_stylesheets` | `templates/partials/base.html.twig` | Registers font stylesheets before the main theme stylesheet. | Not required; the parent block is empty. | Add font assets. |
 | `theme_stylesheet` | `templates/partials/base.html.twig` | Selects and registers one main theme stylesheet. | No; the child selects the replacement stylesheet. | Full replacement of the main stylesheet selection. |
 | `stylesheets` | `templates/partials/base.html.twig` | Registers font, main theme and optional icon stylesheets. | Yes, when preserving parent stylesheets. | Add stylesheet registrations around the parent output. |
@@ -571,6 +572,12 @@ The following blocks are the stable public Twig API for child themes in Basalt
 | `footer` | `templates/partials/base.html.twig` | Renders the document footer through the public footer partial. | Only when retaining the parent footer. | Full replacement of the footer region. |
 | `bottom` | `templates/partials/base.html.twig` | Renders the final `bottom` JavaScript asset group before `</body>`. | Yes. | Add content while preserving final script output. |
 
+The empty `head_extra` block can add child-specific elements such as favicons,
+a web app manifest, verification tags or additional metadata. Basalt does not
+automatically provide analytics, Google Tag Manager, Open Graph, Twitter Cards
+or JSON-LD. Because `head_extra` is rendered at the end of the head, it should
+not be treated as the preferred location for performance-critical preloads.
+
 The narrow `theme_stylesheet` block registers `dist/css/style.css` by default.
 A child can replace it without `parent()` to select an alternative compiled
 stylesheet without duplicating the surrounding asset logic. The optional
@@ -579,7 +586,15 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.5.0.
+are not part of the stable public Twig API for Basalt 0.6.0.
+
+A child that replaces the public `main` block must preserve both
+`id="main-content"` and `tabindex="-1"` on its main content target. The skip link
+depends on this contract to move navigation past the site header.
+
+Basalt sets the document `dir` attribute from Grav's active language metadata.
+This improves document semantics for right-to-left languages but does not claim
+complete visual RTL support for every component.
 
 The following partials are public override points for child themes:
 
