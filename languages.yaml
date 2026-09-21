@@ -2,11 +2,13 @@ en:
   THEME_BASALT:
     SKIP_LINK: Skip to main content
     ARIA:
+      BREADCRUMBS: Breadcrumbs
       PRIMARY_NAVIGATION: Primary navigation
     TOGGLE_NAVIGATION: Toggle navigation
 pl:
   THEME_BASALT:
     SKIP_LINK: Przejdź do treści głównej
     ARIA:
+      BREADCRUMBS: Ścieżka nawigacyjna
       PRIMARY_NAVIGATION: Nawigacja główna
     TOGGLE_NAVIGATION: Przełącz nawigację

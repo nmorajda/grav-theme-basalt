@@ -1,0 +1,26 @@
+{% set item_list = [] %}
+
+{% for crumb in crumbs %}
+    {% set item_list = item_list|merge([{
+        '@type': 'ListItem',
+        'position': loop.index,
+        'name': crumb.menu,
+        'item': crumb.url
+    }]) %}
+{% endfor %}
+
+{% set breadcrumb_schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': item_list
+} %}
+
+{% set json_options =
+    constant('JSON_HEX_TAG')
+    b-or constant('JSON_HEX_AMP')
+    b-or constant('JSON_HEX_APOS')
+    b-or constant('JSON_HEX_QUOT')
+    b-or constant('JSON_UNESCAPED_UNICODE')
+%}
+
+<script type="application/ld+json">{{ breadcrumb_schema|json_encode(json_options)|raw }}</script>

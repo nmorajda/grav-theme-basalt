@@ -69,6 +69,12 @@
     {% block main %}
         <main id="main-content" class="site-main" tabindex="-1">
             <div class="container">
+                {% block breadcrumbs %}
+                    {% if breadcrumbs is defined and breadcrumbs and (config.plugins.breadcrumbs.enabled ?? false) %}
+                        {% include 'partials/breadcrumbs.html.twig' %}
+                    {% endif %}
+                {% endblock %}
+
                 {% block content %}{% endblock %}
             </div>
         </main>

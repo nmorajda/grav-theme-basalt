@@ -500,6 +500,31 @@ When disabled:
 A child theme can provide a different icon system by disabling Bootstrap Icons
 and overriding the relevant templates or macro.
 
+## Optional breadcrumbs
+
+Basalt can render breadcrumbs from the official Grav Breadcrumbs plugin without
+requiring or installing it automatically. Install the plugin when the site
+needs breadcrumb navigation:
+
+```bash
+bin/gpm install breadcrumbs
+```
+
+Set `built_in_css: false` in the plugin configuration so that the plugin does
+not load its own stylesheet. Basalt uses the Bootstrap breadcrumb component
+already included in the theme CSS. The plugin must remain enabled for the
+component to render.
+
+The integration uses the hierarchy returned by `breadcrumbs.get()` and respects
+the plugin's hierarchy, visibility, trailing-link and home-icon settings.
+Bootstrap supplies the breadcrumb divider. Breadcrumbs is intentionally not
+listed as a Basalt dependency in `blueprints.yaml`, so the theme continues to
+work when the plugin is absent.
+
+The public breadcrumb partial keeps its accessible navigation markup separate
+from its Schema.org data. It delegates JSON-LD generation to an internal partial
+and emits the structured data only when the trail contains at least two items.
+
 ## Theme inheritance
 
 Basalt is intended to be used as a reusable parent theme. Each website can use
@@ -569,6 +594,7 @@ The following blocks are the stable public Twig API for child themes in Basalt
 | `skip_links` | `templates/partials/base.html.twig` | Renders the required main-content skip link and provides an extension point for additional skip links. | Yes, when adding links; not when providing an equivalent complete collection. | Extend the parent output or replace the collection while preserving a link to `#main-content`. |
 | `header` | `templates/partials/base.html.twig` | Renders the document header through the public header partial. | Only when retaining the parent header. | Full replacement of the header region. |
 | `main` | `templates/partials/base.html.twig` | Renders the main element, container and page content block. | Only when retaining the parent main region. | Full replacement of the main region. |
+| `breadcrumbs` | `templates/partials/base.html.twig` | Conditionally renders the optional Breadcrumbs plugin integration before page content. | Only when retaining the parent breadcrumbs. | Add content around or replace the breadcrumb region. |
 | `content` | `templates/partials/base.html.twig`, `templates/default.html.twig`, `templates/error.html.twig` | Renders content defined by the current page template. | Only when extending that page type's existing content. | Page-type-dependent full replacement. |
 | `footer` | `templates/partials/base.html.twig` | Renders the document footer through the public footer partial. | Only when retaining the parent footer. | Full replacement of the footer region. |
 | `bottom` | `templates/partials/base.html.twig` | Renders the final `bottom` JavaScript asset group before `</body>`. | Yes. | Add content while preserving final script output. |
@@ -608,6 +634,7 @@ The following partials are public override points for child themes:
 | `templates/partials/header.html.twig` | Renders the site header and includes the navigation partial. |
 | `templates/partials/brand.html.twig` | Renders the home link with `site.title`; override it to provide a custom brand or logo. |
 | `templates/partials/navigation.html.twig` | Renders the responsive navbar and delegates menu items to the navigation macro. |
+| `templates/partials/breadcrumbs.html.twig` | Renders optional plugin data as an accessible Bootstrap breadcrumb and delegates JSON-LD generation to an internal partial. |
 | `templates/partials/footer.html.twig` | Renders the site footer. |
 
 The public navigation macro is defined in

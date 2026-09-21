@@ -1,0 +1,36 @@
+{% set crumbs = breadcrumbs.get() %}
+{% set breadcrumbs_config = config.plugins.breadcrumbs %}
+
+{% if crumbs|length > 1 or breadcrumbs_config.show_all %}
+    <nav aria-label="{{ 'THEME_BASALT.ARIA.BREADCRUMBS'|t|e('html_attr') }}">
+        <ol class="breadcrumb">
+            {% for crumb in crumbs %}
+                {% set is_current = crumb.id == page.id %}
+                {% set is_linked = (not loop.last and crumb.routable) or (loop.last and breadcrumbs_config.link_trailing) %}
+
+                <li class="breadcrumb-item{% if is_current %} active{% endif %}"{% if is_current %}
+                    aria-current="page"{% endif %}>
+                    {% if is_linked %}
+                        <a href="{{ crumb.url|e('html_attr') }}">
+                            {% if loop.first and breadcrumbs_config.icon_home %}
+                                <i class="{{ breadcrumbs_config.icon_home|e('html_attr') }}" aria-hidden="true"></i>
+                            {% endif %}
+                            <span>{{ crumb.menu|e }}</span>
+                        </a>
+                    {% else %}
+                        <span>
+                            {% if loop.first and breadcrumbs_config.icon_home %}
+                                <i class="{{ breadcrumbs_config.icon_home|e('html_attr') }}" aria-hidden="true"></i>
+                            {% endif %}
+                            <span>{{ crumb.menu|e }}</span>
+                        </span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </nav>
+
+    {% if crumbs|length >= 2 %}
+        {% include 'partials/breadcrumbs-schema.html.twig' with { crumbs: crumbs } only %}
+    {% endif %}
+{% endif %}
