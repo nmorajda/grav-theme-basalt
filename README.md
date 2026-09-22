@@ -638,7 +638,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.6.0:
+0.7.0:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -671,7 +671,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.6.0.
+are not part of the stable public Twig API for Basalt 0.7.0.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
