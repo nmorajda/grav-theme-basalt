@@ -23,6 +23,26 @@
     {% block canonical %}
         <link rel="canonical" href="{{ page.canonical(true)|e('html_attr') }}">
     {% endblock %}
+
+    {% block favicon %}
+        <link
+            rel="icon"
+            href="{{ url('theme://images/favicon-32x32.png')|e('html_attr') }}"
+            type="image/png"
+            sizes="32x32"
+        >
+        <link
+            rel="icon"
+            href="{{ url('theme://images/favicon-16x16.png')|e('html_attr') }}"
+            type="image/png"
+            sizes="16x16"
+        >
+        <link
+            rel="apple-touch-icon"
+            href="{{ url('theme://images/apple-touch-icon.png')|e('html_attr') }}"
+            sizes="180x180"
+        >
+    {% endblock %}
 {% endblock %}
 
 {% block stylesheets %}

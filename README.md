@@ -586,6 +586,7 @@ The following blocks are the stable public Twig API for child themes in Basalt
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
 | `title` | `templates/partials/base.html.twig` | Renders the complete document title element. | No when replacing the title. | Full replacement. |
+| `favicon` | `templates/partials/base.html.twig` | Renders the default PNG favicon and Apple touch icon links. | No when replacing the favicon set. | Full replacement, or extension with `parent()` when retaining the defaults. |
 | `head_extra` | `templates/partials/base.html.twig` | Provides an empty extension point at the end of the document head. | Not required; the parent block is empty. | Add child-specific head elements. |
 | `font_stylesheets` | `templates/partials/base.html.twig` | Registers font stylesheets before the main theme stylesheet. | Not required; the parent block is empty. | Add font assets. |
 | `theme_stylesheet` | `templates/partials/base.html.twig` | Selects and registers one main theme stylesheet. | No; the child selects the replacement stylesheet. | Full replacement of the main stylesheet selection. |
