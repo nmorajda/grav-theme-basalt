@@ -6,10 +6,12 @@ Basalt is an independent, reusable Grav 2 base theme and a separate Git reposito
 
 ## Assets and build
 
-- Edit CSS, JavaScript, and font sources in `src/scss/`, `src/js/`, and `src/fonts/`.
-- Do not edit generated files in `dist/` directly.
+- Edit theme CSS, JavaScript, and font sources in `src/scss/`, `src/js/`, and `src/fonts/`. Put optional third-party browser assets in `src/vendor/css/` and `src/vendor/js/`.
+- Do not edit generated files in `dist/` directly, including optional vendor bundles and `basalt-vendor.json`.
 - Keep required Bootstrap SCSS and JavaScript component imports aligned.
-- After source asset changes, run `npm run build` and include the updated, Git-tracked `dist/` files.
+- After source asset changes, run `npm run build` and include the updated, Git-tracked `dist/` files. Use the narrower `vendor` Gulp task only when rebuilding optional vendor assets intentionally.
+- Preserve deterministic filename ordering, per-file BOM removal and manifest-controlled Twig loading for vendor assets.
+- Empty vendor directories must remove stale optional bundles and produce `{"css":false,"js":false}` in `dist/basalt-vendor.json`.
 - Use the Node.js version from `.nvmrc` and install dependencies with `npm ci` when setup is required.
 - Do not edit or commit `node_modules/` or development source maps.
 

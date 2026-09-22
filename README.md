@@ -87,6 +87,63 @@ dist/css/style.css
 dist/js/script.js
 ```
 
+The build also writes `dist/basalt-vendor.json`, which records whether optional
+vendor CSS and JavaScript bundles exist.
+
+## Optional vendor assets
+
+Basalt provides empty source directories for third-party browser libraries that
+need to load before the main theme assets:
+
+```text
+src/vendor/css/
+src/vendor/js/
+```
+
+Place distributed CSS files in `src/vendor/css` and distributed JavaScript
+files in `src/vendor/js`. Files are concatenated deterministically in filename
+order. Prefix filenames when a library requires a specific order, for example
+`10-library.css` and `20-library-addon.css`.
+
+The `vendor` Gulp task generates these optional bundles:
+
+```text
+dist/css/basalt-plugins.css
+dist/js/basalt-plugins.js
+```
+
+It also writes `dist/basalt-vendor.json` with `css` and `js` boolean flags. The
+base Twig template reads this manifest and registers only bundles that exist.
+With empty vendor directories, the manifest is:
+
+```json
+{"css":false,"js":false}
+```
+
+Empty directories do not create empty bundles. Rebuilding after removing all
+vendor sources removes stale optional bundles. The directories retain their
+`.gitkeep` files as extension points.
+
+To add a library:
+
+1. Copy its distributed CSS and JavaScript into the matching `src/vendor`
+   directories.
+2. Add required initialization to `src/js/script.js`.
+3. Run `npm run build` and commit the updated generated files in `dist`.
+
+Vendor CSS loads before `dist/css/style.css`. Vendor JavaScript loads before
+`dist/js/script.js`. Both use higher Grav asset priorities than the main theme
+assets.
+
+The vendor task removes a leading byte order mark (BOM) from every input before
+joining files. This prevents a BOM from appearing at the start or between files
+in the generated bundles and keeps them compatible with the Grav CSS and
+JavaScript pipelines.
+
+All files in `dist` are generated outputs and must not be edited manually. Use
+`npx gulp vendor` to rebuild only the optional bundles and manifest, or
+`npm run build` for the complete production build.
+
 ## Modular Bootstrap SCSS
 
 Bootstrap components are selected in:
@@ -733,6 +790,7 @@ version declared in its blueprint.
 ```text
 basalt/
 ├── dist/
+│   ├── basalt-vendor.json
 │   ├── css/
 │   │   ├── icons.css
 │   │   └── style.css
@@ -749,24 +807,29 @@ basalt/
 │   │   ├── modules/
 │   │   │   └── bootstrap.js
 │   │   └── script.js
-│   └── scss/
-│       ├── base/
-│       │   ├── _document.scss
-│       │   └── _fonts.scss
-│       ├── components/
-│       ├── layout/
-│       │   ├── _footer.scss
-│       │   ├── _header.scss
-│       │   ├── _main.scss
-│       │   └── _navigation.scss
-│       ├── settings/
-│       │   └── _variables.scss
-│       ├── tools/
-│       ├── utilities/
-│       ├── _basalt.scss
-│       ├── _bootstrap-components.scss
-│       ├── icons.scss
-│       └── style.scss
+│   ├── scss/
+│   │   ├── base/
+│   │   │   ├── _document.scss
+│   │   │   └── _fonts.scss
+│   │   ├── components/
+│   │   ├── layout/
+│   │   │   ├── _footer.scss
+│   │   │   ├── _header.scss
+│   │   │   ├── _main.scss
+│   │   │   └── _navigation.scss
+│   │   ├── settings/
+│   │   │   └── _variables.scss
+│   │   ├── tools/
+│   │   ├── utilities/
+│   │   ├── _basalt.scss
+│   │   ├── _bootstrap-components.scss
+│   │   ├── icons.scss
+│   │   └── style.scss
+│   └── vendor/
+│       ├── css/
+│       │   └── .gitkeep
+│       └── js/
+│           └── .gitkeep
 ├── templates/
 │   ├── macros/
 │   │   └── navigation.html.twig
@@ -795,6 +858,10 @@ basalt/
 
 The `dist` directory is committed to the repository intentionally. This allows
 the theme to be installed and used without running the Node.js build process.
+
+Optional `basalt-plugins.css` and `basalt-plugins.js` files appear in `dist`
+only when their source directories contain non-empty matching files. The
+`basalt-vendor.json` manifest is always generated.
 
 Source maps are development-only and are excluded from Git.
 

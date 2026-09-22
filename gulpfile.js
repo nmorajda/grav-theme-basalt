@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { rm } = require("node:fs/promises");
+const { mkdir, readFile, readdir, rm, writeFile } = require("node:fs/promises");
 const { src, dest, watch, series, parallel } = require("gulp");
 const gulpSass = require("gulp-sass")(require("sass"));
 const postcss = require("gulp-postcss");
@@ -88,22 +88,70 @@ async function scriptsTask() {
     });
 }
 
+async function vendorTask() {
+    async function bundle(kind, extension, separator) {
+        const directory = path.join(__dirname, "src/vendor", kind);
+        const output = path.join(
+            __dirname,
+            `dist/${kind}/basalt-plugins.${extension}`
+        );
+
+        const entries = await readdir(directory, { withFileTypes: true });
+        const files = entries
+            .filter((entry) =>
+                entry.isFile() && entry.name.endsWith(`.${extension}`)
+            )
+            .map((entry) => entry.name)
+            .sort();
+
+        const contents = [];
+
+        for (const file of files) {
+            const content = (
+                await readFile(path.join(directory, file), "utf8")
+            ).replace(/^\uFEFF/, "");
+            if (content.trim()) contents.push(content);
+        }
+
+        if (!contents.length) {
+            await rm(output, { force: true });
+            return false;
+        }
+
+        await mkdir(path.dirname(output), { recursive: true });
+        await writeFile(output, `${contents.join(separator)}\n`);
+        return true;
+    }
+
+    const css = await bundle("css", "css", "\n");
+    const js = await bundle("js", "js", "\n;\n");
+
+    await mkdir(paths.output, { recursive: true });
+    await writeFile(
+        path.join(paths.output, "basalt-vendor.json"),
+        JSON.stringify({ css, js }) + "\n"
+    );
+}
+
 function watchTask() {
     watch(paths.styles.watch, stylesTask);
     watch(paths.fonts.watch, fontsTask);
     watch(paths.scripts.watch, scriptsTask);
+    watch("src/vendor/**/*.{css,js}", vendorTask);
 }
 
 const compileTask = parallel(
     stylesTask,
     fontsTask,
-    scriptsTask
+    scriptsTask,
+    vendorTask
 );
 
 exports.clean = cleanTask;
 exports.styles = stylesTask;
 exports.fonts = fontsTask;
 exports.scripts = scriptsTask;
+exports.vendor = vendorTask;
 exports.watch = watchTask;
 exports.build = series(setProduction, cleanTask, compileTask);
 exports.default = series(cleanTask, compileTask, watchTask);

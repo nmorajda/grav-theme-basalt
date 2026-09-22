@@ -48,6 +48,11 @@
 {% block stylesheets %}
     {% block font_stylesheets %}{% endblock %}
 
+    {% set basalt_vendor = json_decode(read_file('theme://dist/basalt-vendor.json') ?: '{}') %}
+    {% if basalt_vendor.css ?? false %}
+        {% do assets.addCss('theme://dist/css/basalt-plugins.css', 110) %}
+    {% endif %}
+
     {% block theme_stylesheet %}
         {% do assets.addCss('theme://dist/css/style.css', 100) %}
     {% endblock %}
@@ -58,6 +63,14 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% set basalt_vendor = json_decode(read_file('theme://dist/basalt-vendor.json') ?: '{}') %}
+    {% if basalt_vendor.js ?? false %}
+        {% do assets.addJs('theme://dist/js/basalt-plugins.js', {
+            group: 'bottom',
+            priority: 110
+        }) %}
+    {% endif %}
+
     {% do assets.addJs('theme://dist/js/script.js', {
         group: 'bottom',
         priority: 100
