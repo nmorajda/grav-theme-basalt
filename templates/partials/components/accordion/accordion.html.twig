@@ -1,0 +1,39 @@
+{#
+    Generic Bootstrap Accordion component.
+
+    Responsibilities:
+    - render the base Bootstrap Accordion structure,
+    - require a stable HTML id,
+    - allow additional CSS classes to be passed,
+    - expose a block for accordion items.
+
+    Available block:
+    - accordion_items
+
+    Expected variables:
+    - id
+    - classes
+
+    Usage example:
+
+    {% embed 'partials/components/accordion/accordion.html.twig' with {
+        id: 'example-accordion'
+    } only %}
+        {% block accordion_items %}
+            ...
+        {% endblock %}
+    {% endembed %}
+
+    This component contains no page-specific or Grav Page logic.
+    Concrete implementations should provide their items through the
+    "accordion_items" block.
+#}
+
+{% set classes = classes ?? null %}
+
+<div
+    class="accordion{% if classes %} {{ classes|e('html_attr') }}{% endif %}"
+    id="{{ id|e('html_attr') }}"
+>
+    {% block accordion_items %}{% endblock %}
+</div>
