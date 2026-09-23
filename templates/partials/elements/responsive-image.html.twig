@@ -1,0 +1,83 @@
+{#
+    Generic renderer for responsive Grav Media images.
+
+    Responsibilities:
+    - generate image variants using derivatives(),
+    - set the "sizes" attribute,
+    - let Grav generate the responsive "srcset",
+    - handle CSS classes and basic image attributes,
+    - use the medium metadata for the alt text when no explicit value is provided.
+
+    This partial accepts Grav Media objects only.
+    It is not intended for direct image URLs or SVG files.
+    For simple images, use:
+    templates/partials/elements/image.html.twig
+
+    Expected properties of the "image" object:
+    - object
+    - sizes
+    - classes
+    - alt
+    - title
+    - loading
+    - decoding
+    - derivatives
+
+    Default derivative configuration:
+    - min: 320
+    - max: 1920
+    - step: 320
+
+    Usage example:
+
+    {% include 'partials/elements/responsive-image.html.twig' with {
+        image: {
+            object: cover,
+            sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 50vw, 100vw',
+            classes: 'img-fluid',
+            loading: 'lazy'
+        }
+    } only %}
+
+    Optional derivative configuration:
+
+    derivatives: {
+        min: 320,
+        max: 1600,
+        step: 320
+    }
+#}
+
+
+{% set image = image ?? {} %}
+{% set object = image.object ?? null %}
+
+{% if object %}
+    {% set meta = object.meta ?? {} %}
+
+    {% set sizes = image.sizes ?? '100vw' %}
+    {% set classes = image.classes ?? null %}
+    {% set alt = image.alt ?? meta['alt'] ?? '' %}
+    {% set title = image.title ?? null %}
+    {% set loading = image.loading ?? 'lazy' %}
+    {% set decoding = image.decoding ?? 'async' %}
+
+    {% set derivatives = image.derivatives ?? {
+        min: 320,
+        max: 1920,
+        step: 320
+    } %}
+
+    {% set rendered = object
+        .derivatives(
+            derivatives.min,
+            derivatives.max,
+            derivatives.step
+        )
+        .sizes(sizes)
+        .loading(loading)
+        .decoding(decoding)
+    %}
+
+    {{ rendered.html(title, alt, classes)|raw }}
+{% endif %}

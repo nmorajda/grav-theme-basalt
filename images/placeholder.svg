@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="640"
+     height="360"
+     viewBox="0 0 640 360"
+     role="img"
+     aria-labelledby="title desc">
+    <title id="title">Basalt image placeholder</title>
+    <desc id="desc">Neutral decorative landscape inspired by basalt rock formations.</desc>
+
+    <rect width="640" height="360" fill="#f3f4f6"/>
+
+    <circle cx="500" cy="92" r="34" fill="#d1d5db"/>
+
+    <path d="M0 235
+             L105 155
+             L178 214
+             L265 128
+             L360 216
+             L445 166
+             L555 232
+             L640 184
+             L640 360
+             L0 360 Z"
+          fill="#d1d5db"/>
+
+    <path d="M0 275
+             L92 219
+             L172 262
+             L278 196
+             L372 267
+             L477 214
+             L562 260
+             L640 226
+             L640 360
+             L0 360 Z"
+          fill="#9ca3af"/>
+
+    <g fill="#6b7280">
+        <path d="M178 237 h34 v123 h-34 z"/>
+        <path d="M214 220 h34 v140 h-34 z"/>
+        <path d="M250 244 h34 v116 h-34 z"/>
+        <path d="M286 211 h34 v149 h-34 z"/>
+        <path d="M322 232 h34 v128 h-34 z"/>
+        <path d="M358 218 h34 v142 h-34 z"/>
+        <path d="M394 248 h34 v112 h-34 z"/>
+    </g>
+
+    <path d="M0 318
+             C90 294 155 327 230 314
+             C315 299 391 333 472 316
+             C535 303 590 309 640 300
+             L640 360
+             L0 360 Z"
+          fill="#4b5563"/>
+</svg>

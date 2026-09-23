@@ -1,0 +1,71 @@
+{#
+    Generic renderer for a single image.
+
+    Responsibilities:
+    - render an image from either a Grav Media object or a direct "src" URL,
+    - optionally apply image transformations,
+    - handle basic HTML image attributes,
+    - use the medium metadata for the alt text when no explicit value is provided.
+
+    Supported sources:
+    - image.object — Grav Media object,
+    - image.src — direct image URL.
+
+    Supported transformations:
+    - resize
+    - forceResize
+    - cropResize
+    - cropZoom
+
+    Expected properties of the "image" object:
+    - object
+    - src
+    - action
+    - width
+    - height
+    - classes
+    - alt
+    - loading
+
+    This partial is intended for simple images.
+    Responsive images with "srcset" and "sizes" are handled by:
+    templates/partials/elements/responsive-image.html.twig
+#}
+
+{% set image = image ?? {} %}
+
+{% set object = image.object ?? null %}
+{% set src = image.src ?? null %}
+{% set action = image.action ?? null %}
+{% set width = image.width ?? null %}
+{% set height = image.height ?? null %}
+{% set classes = image.classes ?? null %}
+{% set loading = image.loading ?? 'lazy' %}
+{% set alt = image.alt ?? (object ? (object.meta.alt ?? '') : '') %}
+
+{% if object %}
+    {% set rendered = object %}
+
+    {% if action == 'resize' and width and height %}
+        {% set rendered = object.resize(width, height) %}
+    {% elseif action == 'forceResize' and width and height %}
+        {% set rendered = object.forceResize(width, height) %}
+    {% elseif action == 'cropResize' and width and height %}
+        {% set rendered = object.cropResize(width, height) %}
+    {% elseif action == 'cropZoom' and width and height %}
+        {% set rendered = object.cropZoom(width, height) %}
+    {% endif %}
+
+    {% set src = rendered.url %}
+{% endif %}
+
+{% if src %}
+    <img
+        src="{{ src|e('html_attr') }}"
+        alt="{{ alt|e('html_attr') }}"
+        loading="{{ loading|e('html_attr') }}"
+        {% if classes %}class="{{ classes|e('html_attr') }}"{% endif %}
+        {% if width %}width="{{ width }}"{% endif %}
+        {% if height %}height="{{ height }}"{% endif %}
+    >
+{% endif %}
