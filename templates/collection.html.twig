@@ -1,17 +1,19 @@
 {% extends 'partials/base.html.twig' %}
 
 {% block content %}
-    <main class="container">
-        {{ page.content|raw }}
+    {{ page.content|raw }}
 
-        {% for item in page.collection %}
-            {% include 'partials/collection/item.html.twig' with {
-                page: item,
-                show_date: page.header.display.date ?? false,
-                show_summary: page.header.display.summary ?? false
-            } %}
-        {% endfor %}
+    {% for item in page.collection %}
+        {% include 'partials/collection/item.html.twig' with {
+            page: item,
+            show_date: page.header.display.date ?? false,
+            show_summary: page.header.display.summary ?? true
+        } %}
+    {% else %}
+        <p class="collection-empty">
+            {{ 'THEME_BASALT.COLLECTION.EMPTY'|t|e }}
+        </p>
+    {% endfor %}
 
-        {% include 'partials/pagination.html.twig' %}
-    </main>
+    {% include 'partials/pagination.html.twig' %}
 {% endblock %}

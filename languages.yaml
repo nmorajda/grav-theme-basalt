@@ -5,10 +5,13 @@ en:
       BREADCRUMBS: Breadcrumbs
       PAGINATION: Pagination
       PRIMARY_NAVIGATION: Primary navigation
+    COLLECTION:
+      EMPTY: No items found.
     PAGINATION:
       NEXT: Next page
       PREVIOUS: Previous page
     TOGGLE_NAVIGATION: Toggle navigation
+
 pl:
   THEME_BASALT:
     SKIP_LINK: Przejdź do treści głównej
@@ -16,6 +19,8 @@ pl:
       BREADCRUMBS: Ścieżka nawigacyjna
       PAGINATION: Paginacja
       PRIMARY_NAVIGATION: Nawigacja główna
+    COLLECTION:
+      EMPTY: Brak elementów do wyświetlenia.
     PAGINATION:
       NEXT: Następna strona
       PREVIOUS: Poprzednia strona
