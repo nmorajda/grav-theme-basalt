@@ -1,20 +1,91 @@
+{#
+    Main collection page template.
+
+    Responsibilities:
+    - read layout configuration from the page frontmatter,
+    - select the collection item variant, e.g. "item" or "card",
+    - configure the responsive column layout,
+    - calculate the "sizes" value for responsive images,
+    - render items from page.collection,
+    - handle an empty collection,
+    - include pagination.
+
+    The item variant maps directly to a template in:
+    templates/partials/collection/<variant>.html.twig
+
+    If the requested variant does not exist, the template falls back to:
+    templates/partials/collection/item.html.twig
+
+    Example frontmatter configuration:
+    layout:
+        variant: card
+        columns: 4
+
+    display:
+        cover: true
+        date: true
+        summary: true
+        read_more: true
+#}
+
 {% extends 'partials/base.html.twig' %}
 
 {% block content %}
+    {% set columns = page.header.layout.columns ?? 1 %}
+
+    {% set variant = page.header.layout.variant ?? 'item' %}
+
+    {% if not (variant matches '/^[a-z0-9_-]+$/') %}
+        {% set variant = 'item' %}
+    {% endif %}
+
+    {% set grid_classes = {
+        1: 'row-cols-1',
+        2: 'row-cols-1 row-cols-md-2',
+        3: 'row-cols-1 row-cols-md-2 row-cols-lg-3',
+        4: 'row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4'
+    } %}
+
+    {% set grid_class = grid_classes[columns] ?? grid_classes[1] %}
+
+    {% set cover_sizes_by_columns = {
+        1: '100vw',
+        2: '(min-width: 768px) 50vw, 100vw',
+        3: '(min-width: 992px) 33.333vw, (min-width: 768px) 50vw, 100vw',
+        4: '(min-width: 1200px) 25vw, (min-width: 992px) 33.333vw, (min-width: 768px) 50vw, 100vw'
+    } %}    
+
+    {% set cover_sizes = cover_sizes_by_columns[columns] ?? cover_sizes_by_columns[1] %}
+
     {{ page.content|raw }}
 
-    {% for item in page.collection %}
-        {% include 'partials/collection/item.html.twig' with {
-            page: item,
-            show_date: page.header.display.date ?? false,
-            show_summary: page.header.display.summary ?? true,
-            show_read_more: page.header.display.read_more ?? false
-        } %}
+    {% if page.collection|length %}
+        <div class="row {{ grid_class }} gy-4">
+            {% for item in page.collection %}
+                <div class="col">
+                    {% include [
+                        'partials/collection/' ~ variant ~ '.html.twig',
+                        'partials/collection/item.html.twig'
+                    ] with {
+                        page: item,
+                        show_cover: page.header.display.cover ?? false,
+                        show_date: page.header.display.date ?? false,
+                        show_summary: page.header.display.summary ?? true,
+                        show_read_more: page.header.display.read_more ?? false,
+                        cover_sizes: cover_sizes
+                    } only %}
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
-        <p class="collection-empty">
-            {{ 'THEME_BASALT.COLLECTION.EMPTY'|t|e }}
-        </p>
-    {% endfor %}
+        {% embed 'partials/components/alert.html.twig' with {
+            variant: 'warning',
+        } only %}
+            {% block alert_content %}
+                {{ 'THEME_BASALT.COLLECTION.EMPTY'|t|e }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 
     {% include 'partials/pagination.html.twig' %}
 {% endblock %}

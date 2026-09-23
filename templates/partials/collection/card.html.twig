@@ -1,0 +1,63 @@
+{#
+    Collection item variant rendered as a Bootstrap Card.
+
+    Responsibilities:
+    - embed the generic Card component,
+    - pass the cover image to the top media section,
+    - display the title, summary, and "Read more" link,
+    - keep the card at full height within the grid.
+
+    The generic Bootstrap Card structure is defined in:
+    templates/partials/components/card.html.twig
+
+    Shared cover logic is handled by:
+    templates/partials/collection/cover.html.twig
+
+    Expected variables:
+    - page
+    - show_cover
+    - show_summary
+    - show_read_more
+    - cover_sizes
+#}
+
+
+{% embed 'partials/components/card.html.twig' with {
+    tag: 'div',
+    classes: 'h-100',
+    page: page,
+    show_cover: show_cover ?? false,
+    show_summary: show_summary ?? true,
+    show_read_more: show_read_more ?? false,
+    cover_sizes: cover_sizes ?? '100vw'
+} only %}
+
+    {% block card_media_top %}
+        {% include 'partials/collection/cover.html.twig' with {
+            page: page,
+            show_cover: show_cover,
+            cover_sizes: cover_sizes
+        } only %}
+    {% endblock %}
+
+    {% block card_body_content %}
+        <h5 class="collection-item__title card-title">
+            <a href="{{ page.url|e('html_attr') }}">
+                {{ page.title|e }}
+            </a>
+        </h5>
+
+        {% if show_summary and page.summary %}
+            <div class="collection-item__summary card-text">
+                {{ page.summary|raw }}
+            </div>
+        {% endif %}
+
+        {% if show_read_more %}
+            <a class="card-link" href="{{ page.url|e('html_attr') }}">
+                {{ 'THEME_BASALT.COLLECTION.READ_MORE'|t|e }}
+            </a>
+        {% endif %}
+    {% endblock %}
+
+{% endembed %}

@@ -1,0 +1,16 @@
+.card {
+	box-shadow: 0 0 0 .05rem rgba(8,60,130,.06),0 0 1.25rem rgba(30,34,40,.04);
+	border: 0;
+	color: inherit;
+
+    &-body {
+	    flex: 1 1 auto;
+	    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+	    color: var(--bs-card-color);
+    }
+
+    &-title {
+        margin-bottom: var(--bs-card-title-spacer-y);
+        color: var(--bs-card-title-color);
+    }    
+}

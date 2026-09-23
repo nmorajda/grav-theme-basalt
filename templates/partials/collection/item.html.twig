@@ -1,5 +1,34 @@
+{#
+    Default variant for a single collection item.
+
+    Responsibilities:
+    - render the optional cover image,
+    - display the page title and link,
+    - optionally display the date,
+    - optionally display the summary,
+    - optionally display the "Read more" link.
+
+    Shared cover logic is handled by:
+    templates/partials/collection/cover.html.twig
+
+    Expected variables:
+    - page
+    - show_cover
+    - show_date
+    - show_summary
+    - show_read_more
+    - cover_sizes
+#}
+
 <article class="collection-item">
     <header class="collection-item__header">
+    
+        {% include 'partials/collection/cover.html.twig' with {
+            page: page,
+            show_cover: show_cover ?? false,
+            cover_sizes: cover_sizes ?? '100vw'
+        } only %}
+
         <h2 class="collection-item__title">
             <a href="{{ page.url|e('html_attr') }}">
                 {{ page.title|e }}

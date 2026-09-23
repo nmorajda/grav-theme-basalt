@@ -1,0 +1,54 @@
+{#
+    Shared partial responsible for rendering the collection item cover.
+
+    Responsibilities:
+    - read the cover filename from the page frontmatter,
+    - retrieve the image from page.media,
+    - render a responsive image when the cover exists,
+    - render the SVG placeholder when the cover is missing,
+    - pass the "sizes" value to the responsive image,
+    - wrap the cover in a link to the page.
+
+    Responsive images are rendered by:
+    templates/partials/elements/responsive-image.html.twig
+
+    The placeholder is rendered by:
+    templates/partials/elements/image.html.twig
+
+    Expected variables:
+    - page
+    - show_cover
+    - cover_sizes
+#}
+
+{% set cover_name = page.header.cover ?? null %}
+{% set cover = cover_name ? page.media[cover_name] : null %}
+
+{% if show_cover ?? false %}
+    <a
+        class="collection-item__cover"
+        href="{{ page.url|e('html_attr') }}"
+    >
+        {% if cover %}
+            {% include 'partials/elements/responsive-image.html.twig' with {
+                image: {
+                    object: cover,
+                    sizes: cover_sizes ?? '100vw',
+                    classes: 'img-fluid',
+                    loading: 'lazy'
+                }
+            } only %}
+        {% else %}
+            {% include 'partials/elements/image.html.twig' with {
+                image: {
+                    src: url('theme://images/placeholder.svg'),
+                    width: 640,
+                    height: 360,
+                    classes: 'img-fluid',
+                    alt: '',
+                    loading: 'lazy'
+                }
+            } only %}
+        {% endif %}
+    </a>
+{% endif %}
