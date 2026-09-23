@@ -7,6 +7,7 @@ en:
       PRIMARY_NAVIGATION: Primary navigation
     COLLECTION:
       EMPTY: No items found.
+      READ_MORE: Read more
     PAGINATION:
       NEXT: Next page
       PREVIOUS: Previous page
@@ -21,6 +22,7 @@ pl:
       PRIMARY_NAVIGATION: Nawigacja główna
     COLLECTION:
       EMPTY: Brak elementów do wyświetlenia.
+      READ_MORE: Czytaj więcej      
     PAGINATION:
       NEXT: Następna strona
       PREVIOUS: Poprzednia strona

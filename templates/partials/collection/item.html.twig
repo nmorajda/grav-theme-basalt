@@ -21,4 +21,10 @@
             {{ page.summary|raw }}
         </div>
     {% endif %}
+
+    {% if show_read_more ?? false %}
+        <a href="{{ page.url|e('html_attr') }}">
+            {{ 'THEME_BASALT.COLLECTION.READ_MORE'|t|e }}
+        </a>
+    {% endif %}    
 </article>

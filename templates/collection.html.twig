@@ -7,7 +7,8 @@
         {% include 'partials/collection/item.html.twig' with {
             page: item,
             show_date: page.header.display.date ?? false,
-            show_summary: page.header.display.summary ?? true
+            show_summary: page.header.display.summary ?? true,
+            show_read_more: page.header.display.read_more ?? false
         } %}
     {% else %}
         <p class="collection-empty">
