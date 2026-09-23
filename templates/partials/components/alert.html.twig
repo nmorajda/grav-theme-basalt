@@ -1,0 +1,57 @@
+{#
+    Generic Bootstrap Alert component.
+
+    Responsibilities:
+    - render the base Bootstrap Alert structure,
+    - select the visual variant via the "variant" variable,
+    - optionally support dismissible alerts,
+    - allow additional CSS classes to be passed,
+    - set the appropriate ARIA role,
+    - expose a block for the alert content.
+
+    Available block:
+    - alert_content
+
+    Expected variables:
+    - variant
+    - dismissible
+    - classes
+    - role
+
+    Usage example:
+
+    {% embed 'partials/components/alert.html.twig' with {
+        variant: 'warning',
+        dismissible: true
+    } only %}
+        {% block alert_content %}
+            Example warning message.
+        {% endblock %}
+    {% endembed %}
+
+    This component contains no page-specific or collection-specific logic.
+    Concrete implementations should provide their content through the
+    "alert_content" block.
+#}
+
+
+{% set variant = variant ?? 'primary' %}
+{% set dismissible = dismissible ?? false %}
+{% set classes = classes ?? null %}
+{% set role = role ?? 'alert' %}
+
+<div
+    class="alert alert-{{ variant|e('html_attr') }}{% if dismissible %} alert-dismissible fade show{% endif %}{% if classes %} {{ classes|e('html_attr') }}{% endif %}"
+    role="{{ role|e('html_attr') }}"
+>
+    {% block alert_content %}{% endblock %}
+
+    {% if dismissible %}
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="{{ 'THEME_BASALT.ARIA.CLOSE'|t|e('html_attr') }}"
+        ></button>
+    {% endif %}
+</div>

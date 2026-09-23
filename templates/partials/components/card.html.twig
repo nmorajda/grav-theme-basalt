@@ -1,0 +1,46 @@
+{#
+    Generic Bootstrap Card component.
+
+    Responsibilities:
+    - render the base Card component structure,
+    - allow the HTML tag to be selected via the "tag" variable,
+    - allow additional CSS classes to be passed,
+    - expose blocks for the individual card sections.
+
+    Available blocks:
+    - card_media_top
+    - card_header
+    - card_body
+    - card_body_content
+    - card_list_group
+    - card_footer
+    - card_media_bottom
+
+    This component contains no collection-specific or Grav Page logic.
+    Concrete implementations should extend it using "embed".
+
+    Expected variables:
+    - tag
+    - classes
+#}
+
+{% set tag = tag ?? 'div' %}
+{% set classes = classes ?? null %}
+
+<{{ tag }} class="card{% if classes %} {{ classes|e('html_attr') }}{% endif %}">
+    {% block card_media_top %}{% endblock %}
+
+    {% block card_header %}{% endblock %}
+
+    {% block card_body %}
+        <div class="card-body">
+            {% block card_body_content %}{% endblock %}
+        </div>
+    {% endblock %}
+
+    {% block card_list_group %}{% endblock %}
+
+    {% block card_footer %}{% endblock %}
+
+    {% block card_media_bottom %}{% endblock %}
+</{{ tag }}>
