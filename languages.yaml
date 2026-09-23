@@ -3,12 +3,20 @@ en:
     SKIP_LINK: Skip to main content
     ARIA:
       BREADCRUMBS: Breadcrumbs
+      PAGINATION: Pagination
       PRIMARY_NAVIGATION: Primary navigation
+    PAGINATION:
+      NEXT: Next page
+      PREVIOUS: Previous page
     TOGGLE_NAVIGATION: Toggle navigation
 pl:
   THEME_BASALT:
     SKIP_LINK: Przejdź do treści głównej
     ARIA:
       BREADCRUMBS: Ścieżka nawigacyjna
+      PAGINATION: Paginacja
       PRIMARY_NAVIGATION: Nawigacja główna
+    PAGINATION:
+      NEXT: Następna strona
+      PREVIOUS: Poprzednia strona
     TOGGLE_NAVIGATION: Przełącz nawigację

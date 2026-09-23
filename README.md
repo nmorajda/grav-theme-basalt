@@ -582,6 +582,42 @@ The public breadcrumb partial keeps its accessible navigation markup separate
 from its Schema.org data. It delegates JSON-LD generation to an internal partial
 and emits the structured data only when the trail contains at least two items.
 
+## Optional pagination
+
+Basalt provides an accessible Bootstrap component for the official Grav
+Pagination plugin without requiring or installing the plugin automatically.
+Install it when a page collection needs pagination:
+
+```bash
+bin/gpm install pagination
+```
+
+Set `built_in_css: false` in the plugin configuration. Basalt already includes
+the Bootstrap pagination component, so the plugin stylesheet is not needed.
+
+Pagination belongs to a specific collection and is not rendered globally by
+`templates/partials/base.html.twig`. Include the public partial explicitly from
+the page template that renders the collection:
+
+```twig
+{% set collection = page.collection() %}
+
+{% for child in collection %}
+    {# Render each collection item. #}
+{% endfor %}
+
+{% include 'partials/pagination.html.twig' with {
+    base_url: page.url,
+    pagination: collection.params.pagination
+} %}
+```
+
+The partial renders only when the plugin is enabled and the pagination helper
+contains more than one page. Its default values remain compatible with the
+official plugin partial: `page.url` supplies `base_url`, and
+`page.collection.params.pagination` supplies `pagination`. Pagination remains
+an optional integration and is not listed as a dependency in `blueprints.yaml`.
+
 ## Theme inheritance
 
 Basalt is intended to be used as a reusable parent theme. Each website can use
@@ -693,6 +729,7 @@ The following partials are public override points for child themes:
 | `templates/partials/brand.html.twig` | Renders the home link with `site.title`; override it to provide a custom brand or logo. |
 | `templates/partials/navigation.html.twig` | Renders the responsive navbar and delegates menu items to the navigation macro. |
 | `templates/partials/breadcrumbs.html.twig` | Renders optional plugin data as an accessible Bootstrap breadcrumb and delegates JSON-LD generation to an internal partial. |
+| `templates/partials/pagination.html.twig` | Renders an explicitly supplied paginated collection as accessible Bootstrap pagination when the optional Pagination plugin is enabled. |
 | `templates/partials/footer.html.twig` | Renders the site footer. |
 
 The public navigation macro is defined in
@@ -838,7 +875,8 @@ basalt/
 │   │   ├── brand.html.twig
 │   │   ├── footer.html.twig
 │   │   ├── header.html.twig
-│   │   └── navigation.html.twig
+│   │   ├── navigation.html.twig
+│   │   └── pagination.html.twig
 │   ├── default.html.twig
 │   └── error.html.twig
 ├── basalt.php

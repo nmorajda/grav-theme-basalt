@@ -1,0 +1,69 @@
+{% set pagination = pagination|default(page.collection.params.pagination) %}
+{% set base_url = base_url|default(page.url) %}
+
+{% if (config.plugins.pagination.enabled ?? false) and pagination and pagination|length > 1 %}
+    <nav aria-label="{{ 'THEME_BASALT.ARIA.PAGINATION'|t|e('html_attr') }}">
+        <ul class="pagination">
+            {% if pagination.hasPrev %}
+                {% set previous_url = (base_url ~ pagination.params ~ pagination.prevUrl)|replace({'//': '/'}) %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        rel="prev"
+                        href="{{ previous_url|e('html_attr') }}"
+                        aria-label="{{ 'THEME_BASALT.PAGINATION.PREVIOUS'|t|e('html_attr') }}"
+                    >
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled" aria-disabled="true">
+                    <span class="page-link">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="visually-hidden">{{ 'THEME_BASALT.PAGINATION.PREVIOUS'|t|e }}</span>
+                    </span>
+                </li>
+            {% endif %}
+
+            {% for paginate in pagination %}
+                {% if paginate.isCurrent %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ paginate.number|e }}</span>
+                    </li>
+                {% elseif paginate.isInDelta %}
+                    {% set page_url = (base_url ~ pagination.params ~ paginate.url)|replace({'//': '/'}) %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ page_url|e('html_attr') }}">
+                            {{ paginate.number|e }}
+                        </a>
+                    </li>
+                {% elseif paginate.isDeltaBorder %}
+                    <li class="page-item disabled" aria-hidden="true">
+                        <span class="page-link">&hellip;</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagination.hasNext %}
+                {% set next_url = (base_url ~ pagination.params ~ pagination.nextUrl)|replace({'//': '/'}) %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        rel="next"
+                        href="{{ next_url|e('html_attr') }}"
+                        aria-label="{{ 'THEME_BASALT.PAGINATION.NEXT'|t|e('html_attr') }}"
+                    >
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled" aria-disabled="true">
+                    <span class="page-link">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="visually-hidden">{{ 'THEME_BASALT.PAGINATION.NEXT'|t|e }}</span>
+                    </span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
