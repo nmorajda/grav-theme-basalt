@@ -1,0 +1,24 @@
+<article class="collection-item">
+    <header class="collection-item__header">
+        <h2 class="collection-item__title">
+            <a href="{{ page.url|e('html_attr') }}">
+                {{ page.title|e }}
+            </a>
+        </h2>
+
+        {% if show_date|default(false) and page.date %}
+            <time
+                class="collection-item__date"
+                datetime="{{ page.date|date('c')|e('html_attr') }}"
+            >
+                {{ page.date|date(config.system.pages.dateformat.short) }}
+            </time>
+        {% endif %}
+    </header>
+
+    {% if (show_summary ?? true) and page.summary %}
+        <div class="collection-item__summary">
+            {{ page.summary|raw }}
+        </div>
+    {% endif %}
+</article>

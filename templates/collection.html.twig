@@ -1,0 +1,17 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block content %}
+    <main class="container">
+        {{ page.content|raw }}
+
+        {% for item in page.collection %}
+            {% include 'partials/collection/item.html.twig' with {
+                page: item,
+                show_date: page.header.display.date ?? false,
+                show_summary: page.header.display.summary ?? false
+            } %}
+        {% endfor %}
+
+        {% include 'partials/pagination.html.twig' %}
+    </main>
+{% endblock %}
