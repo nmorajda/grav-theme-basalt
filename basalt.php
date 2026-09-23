@@ -21,4 +21,11 @@ class Basalt extends Theme
             'basalt'
         );
     }
+
+    public function onShortcodeHandlers(): void
+    {
+        $this->grav['shortcode']->registerAllShortcodes(
+            __DIR__ . '/shortcodes'
+        );
+    }
 }

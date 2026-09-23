@@ -1,0 +1,55 @@
+{#
+    Accordion item shortcode.
+
+    Available shortcode parameters:
+    - title
+    - id
+    - heading_tag
+
+    Parent accordion parameters used:
+    - id
+    - allow_multiple
+    - open_first
+#}
+
+{% set parent = shortcode.parent %}
+
+{% set parent_id = parent
+    ? parent.getParameter('id', 'accordion-' ~ parent.position)
+    : null
+%}
+
+{% set allow_multiple_value = parent
+    ? parent.getParameter('allow_multiple', 'false')
+    : 'false'
+%}
+
+{% set open_first_value = parent
+    ? parent.getParameter('open_first', 'true')
+    : 'true'
+%}
+
+{% set allow_multiple = allow_multiple_value|lower in ['1', 'true', 'yes', 'on'] %}
+{% set open_first = open_first_value|lower in ['1', 'true', 'yes', 'on'] %}
+
+{% set item_id = params.id ?? parent_id ~ '-item-' ~ shortcode.position %}
+{% set heading_tag = params.heading_tag ?? 'h2' %}
+{% set title = params.title ?? '' %}
+{% set expanded = open_first and shortcode.namePosition == 1 %}
+
+{% embed 'partials/components/accordion/item.html.twig' with {
+    id: item_id,
+    parent_id: allow_multiple ? null : parent_id,
+    expanded: expanded,
+    heading_tag: heading_tag,
+    title: title,
+    content: content
+} only %}
+    {% block accordion_header %}
+        {{ title }}
+    {% endblock %}
+
+    {% block accordion_content %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}

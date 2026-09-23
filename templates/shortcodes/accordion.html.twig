@@ -1,0 +1,29 @@
+{#
+    Accordion shortcode wrapper.
+
+    Available shortcode parameters:
+    - id
+    - variant
+
+    The nested accordion-item shortcodes are rendered through "content".
+#}
+
+{% set accordion_id = params.id ?? 'accordion-' ~ shortcode.position %}
+
+{% set variant_classes = {
+    'default': null,
+    'flush': 'accordion-flush'
+} %}
+
+{% set variant = params.variant ?? 'default' %}
+{% set classes = variant_classes[variant] ?? null %}
+
+{% embed 'partials/components/accordion/accordion.html.twig' with {
+    id: accordion_id,
+    classes: classes,
+    content: content
+} only %}
+    {% block accordion_items %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}
