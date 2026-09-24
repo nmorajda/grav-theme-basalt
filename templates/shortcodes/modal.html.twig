@@ -1,0 +1,35 @@
+{#
+    Modal shortcode wrapper.
+
+    Available shortcode parameters:
+    - id
+    - title
+    - label
+    - size
+    - centered
+    - scrollable
+
+    The shortcode content is rendered inside the modal body.
+#}
+
+{% set modal_id = params.id ?? ('modal-' ~ shortcode.position) %}
+
+{% set centered_value = params.centered ?? 'false' %}
+{% set scrollable_value = params.scrollable ?? 'false' %}
+
+{% set centered = centered_value|lower in ['1', 'true', 'yes', 'on'] %}
+{% set scrollable = scrollable_value|lower in ['1', 'true', 'yes', 'on'] %}
+
+{% embed 'partials/components/modal/modal.html.twig' with {
+    id: modal_id,
+    title: params.title ?? null,
+    label: params.label ?? null,
+    size: params.size ?? null,
+    centered: centered,
+    scrollable: scrollable,
+    content: content
+} only %}
+    {% block body %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}
