@@ -12,7 +12,8 @@ en:
       NEXT: Next page
       PREVIOUS: Previous page
     TOGGLE_NAVIGATION: Toggle navigation
-
+    MODAL:
+      CLOSE: Close
 pl:
   THEME_BASALT:
     SKIP_LINK: Przejdź do treści głównej
@@ -27,3 +28,5 @@ pl:
       NEXT: Następna strona
       PREVIOUS: Poprzednia strona
     TOGGLE_NAVIGATION: Przełącz nawigację
+    MODAL:
+      CLOSE: Zamknij

@@ -1,0 +1,84 @@
+{#
+    Generic Bootstrap modal component.
+
+    Parameters:
+    - id: Required unique modal ID.
+    - title: Optional visible modal title.
+    - label: Accessible label used when title is not provided.
+    - size: Optional modal size: sm, lg or xl.
+    - centered: Vertically centers the modal dialog.
+    - scrollable: Makes the modal body scrollable.
+
+    Blocks:
+    - body: Main modal content.
+    - footer: Optional modal footer content.
+#}
+
+{% set modal_id = id ?? null %}
+{% set modal_title = title ?? null %}
+{% set modal_label = label ?? null %}
+{% set modal_size = size ?? null %}
+{% set modal_centered = centered ?? false %}
+{% set modal_scrollable = scrollable ?? false %}
+
+{% set dialog_classes = ['modal-dialog'] %}
+
+{% if modal_size in ['sm', 'lg', 'xl'] %}
+    {% set dialog_classes = dialog_classes|merge(['modal-' ~ modal_size]) %}
+{% endif %}
+
+{% if modal_centered %}
+    {% set dialog_classes = dialog_classes|merge(['modal-dialog-centered']) %}
+{% endif %}
+
+{% if modal_scrollable %}
+    {% set dialog_classes = dialog_classes|merge(['modal-dialog-scrollable']) %}
+{% endif %}
+
+<div
+    id="{{ modal_id|e('html_attr') }}"
+    class="modal fade"
+    tabindex="-1"
+    {% if modal_title %}
+        aria-labelledby="{{ (modal_id ~ '-title')|e('html_attr') }}"
+    {% elseif modal_label %}
+        aria-label="{{ modal_label|e('html_attr') }}"
+    {% endif %}
+    aria-hidden="true"
+>
+    <div class="{{ dialog_classes|join(' ') }}">
+        <div class="modal-content">
+            <div class="modal-header">
+                {% if modal_title %}
+                    <h2
+                        id="{{ (modal_id ~ '-title')|e('html_attr') }}"
+                        class="modal-title"
+                    >
+                        {{ modal_title|e }}
+                    </h2>
+                {% endif %}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'THEME_BASALT.MODAL.CLOSE'|t|e('html_attr') }}"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                {% block body %}{% endblock %}
+            </div>
+
+            {% set modal_footer %}
+                {% block footer %}{% endblock %}
+            {% endset %}
+
+            {% if modal_footer|trim %}
+                <div class="modal-footer">
+                    {{ modal_footer|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
