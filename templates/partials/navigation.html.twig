@@ -30,6 +30,13 @@
                     icons_enabled
                 ) }}
             </ul>
+
+            {% if
+                'Grav\\Plugin\\LangSwitcherPlugin' in grav.plugins|keys
+                and (config.plugins.langswitcher.enabled ?? false)
+            %}
+                {% include 'partials/components/langswitcher/langswitcher.html.twig' %}
+            {% endif %}          
         </div>
     </div>
 </nav>
