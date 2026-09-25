@@ -1,0 +1,32 @@
+{#
+    Carousel shortcode wrapper.
+
+    Available shortcode parameters:
+    - id
+    - label
+    - controls
+    - indicators
+
+    The nested carousel-item shortcodes are rendered through "content".
+#}
+
+{% set carousel_id = params.id ?? ('carousel-' ~ shortcode.position) %}
+
+{% set controls_value = params.controls ?? 'true' %}
+{% set indicators_value = params.indicators ?? 'true' %}
+
+{% set controls = controls_value|lower in ['1', 'true', 'yes', 'on'] %}
+{% set indicators = indicators_value|lower in ['1', 'true', 'yes', 'on'] %}
+
+{% embed 'partials/components/carousel/carousel.html.twig' with {
+    id: carousel_id,
+    label: params.label ?? null,
+    controls: controls,
+    indicators: indicators,
+    item_count: item_count,
+    content: content
+} only %}
+    {% block carousel_items %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}

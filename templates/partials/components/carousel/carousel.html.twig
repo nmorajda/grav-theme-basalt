@@ -1,0 +1,107 @@
+{#
+    Generic Bootstrap Carousel component.
+
+    Responsibilities:
+    - render the base Carousel component structure,
+    - render slide indicators,
+    - render Carousel items,
+    - render previous and next controls,
+    - automatically mark the first item as active.
+
+    Individual Carousel items are rendered by:
+    templates/partials/components/carousel/item.html.twig
+
+    Expected variables:
+    - id — required, must be unique within the document
+    - items
+    - item_count — optional number of Carousel items; defaults to items length
+    - controls
+    - indicators
+    - label — optional accessible name for the Carousel
+
+    Default values:
+    - controls: true
+    - indicators: true
+    - items: []
+    - item_count: items length
+#}
+
+{% set carousel_id = id %}
+{% set controls = controls ?? true %}
+{% set indicators = indicators ?? true %}
+{% set items = items ?? [] %}
+{% set item_count = item_count ?? items|length %}
+{% set label = label ?? null %}
+
+{% if carousel_id and item_count > 0 %}
+    <div
+        id="{{ carousel_id|e('html_attr') }}"
+        class="carousel slide"
+        {% if label %}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="{{ label|e('html_attr') }}"
+        {% endif %}
+    >
+        {% if indicators and item_count > 1 %}
+            <div class="carousel-indicators">
+                {% for index in 0..(item_count - 1) %}
+                    <button
+                        type="button"
+                        data-bs-target="#{{ carousel_id|e('html_attr') }}"
+                        data-bs-slide-to="{{ index }}"
+                        {% if loop.first %}class="active" aria-current="true"{% endif %}
+                        aria-label="{{ 'THEME_BASALT.CAROUSEL.INDICATOR'|t(loop.index)|e('html_attr') }}"
+                    ></button>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="carousel-inner">
+            {% block carousel_items %}
+                {% for item in items %}
+                    {% include 'partials/components/carousel/item.html.twig' with {
+                        image: item.image,
+                        caption: item.caption|default(null),
+                        active: loop.first,
+                        first: loop.first,
+                        position: loop.index,
+                        total: loop.length
+                    } only %}
+                {% endfor %}
+            {% endblock %}
+        </div>
+
+        {% if controls and item_count > 1 %}
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#{{ carousel_id|e('html_attr') }}"
+                data-bs-slide="prev"
+            >
+                <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">
+                    {{ 'THEME_BASALT.CAROUSEL.PREVIOUS'|t }}
+                </span>
+            </button>
+
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#{{ carousel_id|e('html_attr') }}"
+                data-bs-slide="next"
+            >
+                <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">
+                    {{ 'THEME_BASALT.CAROUSEL.NEXT'|t }}
+                </span>
+            </button>
+        {% endif %}
+    </div>
+{% endif %}

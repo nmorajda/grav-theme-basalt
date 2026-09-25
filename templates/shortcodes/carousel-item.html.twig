@@ -1,0 +1,32 @@
+{#
+    Carousel item shortcode.
+
+    Available shortcode parameters:
+    - image
+    - alt
+
+    The shortcode content is rendered inside the Carousel caption.
+#}
+
+{% set image_name = params.image ?? null %}
+{% set image_object = image_name ? page.media[image_name] : null %}
+
+{% embed 'partials/components/carousel/item.html.twig' with {
+    image: {
+        object: image_object,
+        alt: params.alt ?? null
+    },
+    active: shortcode.namePosition == 1,
+    first: shortcode.namePosition == 1,
+    position: shortcode.namePosition,
+    total: item_count,
+    content: content
+} only %}
+    {% block carousel_caption %}
+        {% if content %}
+            <div class="carousel-caption">
+                {{ content|raw }}
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endembed %}

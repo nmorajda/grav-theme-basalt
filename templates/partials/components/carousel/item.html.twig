@@ -1,0 +1,52 @@
+{#
+    Bootstrap Carousel item component.
+
+    Responsibilities:
+    - render a single Carousel item,
+    - render a responsive image,
+    - optionally render a caption,
+    - mark the item as active when requested.
+
+    Expected variables:
+    - image
+    - caption
+    - active
+    - first
+    - position
+    - total
+#}
+
+<div
+    class="carousel-item{% if active %} active{% endif %}"
+    role="group"
+    aria-roledescription="slide"
+    aria-label="{{ 'THEME_BASALT.CAROUSEL.SLIDE'|t(position, total)|e('html_attr') }}"
+>
+    {% include 'partials/elements/responsive-image.html.twig' with {
+        image: {
+            object: image.object,
+            sizes: image.sizes ?? '100vw',
+            classes: 'd-block w-100' ~ (image.classes ? ' ' ~ image.classes : ''),
+            alt: image.alt ?? null,
+            loading: image.loading ?? (first ? 'eager' : 'lazy')
+        }
+    } only %}
+
+    {% block carousel_caption %}
+        {% if caption %}
+            <div class="carousel-caption">
+                {% if caption.title %}
+                    {% set title_tag = caption.title_tag ?? 'div' %}
+
+                    <{{ title_tag }} class="carousel-caption__title">
+                        {{ caption.title }}
+                    </{{ title_tag }}>
+                {% endif %}
+
+                {% if caption.text %}
+                    <p>{{ caption.text }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endblock %}
+</div>
