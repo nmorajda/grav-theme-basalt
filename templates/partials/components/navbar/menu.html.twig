@@ -1,0 +1,19 @@
+{#
+    Navbar menu component.
+
+    Renders the visible Grav page tree using the navigation macro.
+    Dropdowns and menu icons are controlled by the theme configuration.
+#}
+
+{% import 'macros/navigation.html.twig' as navigation %}
+
+{% set dropdown_enabled = config.theme.dropdown.enabled ?? true %}
+{% set icons_enabled = config.theme.icons.enabled ?? true %}
+
+<ul class="navbar-nav me-auto">
+    {{ navigation.render(
+        pages.children.visible,
+        dropdown_enabled,
+        icons_enabled
+    ) }}
+</ul>

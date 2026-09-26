@@ -1,0 +1,34 @@
+{#
+    SimpleSearch form component.
+
+    Renders a Bootstrap search form powered by the SimpleSearch plugin.
+#}
+
+{% set min_chars = config.get('plugins.simplesearch.min_query_length', 3) %}
+{% set search_route = config.plugins.simplesearch.route %}
+{% set search_path = search_route in ['@self', '/'] ? '' : search_route %}
+
+<form
+    class="d-flex"
+    role="search"
+    name="search"
+    data-simplesearch-form
+>
+    <input
+        class="form-control me-2"
+        name="searchfield"
+        type="search"
+        placeholder="{{ 'PLUGIN_SIMPLESEARCH.SEARCH_PLACEHOLDER'|t|e('html_attr') }}"
+        aria-label="{{ 'PLUGIN_SIMPLESEARCH.SEARCH_PLACEHOLDER'|t|e('html_attr') }}"
+        value="{{ query|e('html_attr') }}"
+        {% if min_chars > 0 %}data-min="{{ min_chars }}"{% endif %}
+        data-search-invalid="{{ 'PLUGIN_SIMPLESEARCH.SEARCH_FIELD_MINIMUM_CHARACTERS'|t(min_chars)|e('html_attr') }}"
+        data-search-separator="{{ config.system.param_sep|e('html_attr') }}"
+        data-search-input="{{ (base_url ~ search_path ~ '/query')|e('html_attr') }}"
+        required
+    >
+
+    <button class="btn btn-outline-success" type="submit">
+        {{ 'THEME_BASALT.SEARCH.SUBMIT'|t }}
+    </button>
+</form>

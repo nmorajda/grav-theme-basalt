@@ -5,3 +5,11 @@ dropdown:
 
 icons:
   enabled: true
+
+navbar:
+  enabled: true
+  expand: lg
+  language_switcher:
+    enabled: true
+  search:
+    enabled: true

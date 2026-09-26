@@ -19,6 +19,8 @@ en:
       SLIDE: "Slide %s of %s"
       PREVIOUS: "Previous"
       NEXT: "Next"
+    SEARCH:
+      SUBMIT: Search
 pl:
   THEME_BASALT:
     SKIP_LINK: Przejdź do treści głównej
@@ -40,3 +42,5 @@ pl:
       SLIDE: "Slajd %s z %s"
       PREVIOUS: "Poprzedni"
       NEXT: "Następny"
+    SEARCH:
+      SUBMIT: Szukaj      

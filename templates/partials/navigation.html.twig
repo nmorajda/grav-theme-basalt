@@ -1,42 +1,7 @@
-{% import 'macros/navigation.html.twig' as navigation %}
+{#
+    Primary navigation entry point.
+#}
 
-{% set dropdown_enabled = config.theme.dropdown.enabled ?? true %}
-{% set icons_enabled = config.theme.icons.enabled ?? true %}
-
-<nav
-    class="navbar navbar-expand-lg"
-    aria-label="{{ 'THEME_BASALT.ARIA.PRIMARY_NAVIGATION'|t|e('html_attr') }}"
->
-    <div class="container">
-        {% include 'partials/brand.html.twig' %}
-
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#main-navigation"
-            aria-controls="main-navigation"
-            aria-expanded="false"
-            aria-label="{{ 'THEME_BASALT.TOGGLE_NAVIGATION'|t|e('html_attr') }}"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div id="main-navigation" class="collapse navbar-collapse">
-            <ul class="navbar-nav">
-                {{ navigation.render(
-                    pages.children.visible,
-                    dropdown_enabled,
-                    icons_enabled
-                ) }}
-            </ul>
-
-            {% if
-                'Grav\\Plugin\\LangSwitcherPlugin' in grav.plugins|keys
-                and (config.plugins.langswitcher.enabled ?? false)
-            %}
-                {% include 'partials/components/langswitcher/langswitcher.html.twig' %}
-            {% endif %}          
-        </div>
-    </div>
-</nav>
+{% if config.theme.navbar.enabled ?? true %}
+    {% include 'partials/components/navbar/navbar.html.twig' %}
+{% endif %}

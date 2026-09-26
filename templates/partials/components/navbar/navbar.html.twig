@@ -1,0 +1,46 @@
+{#
+    Navbar component.
+
+    Renders the primary Bootstrap navigation bar and composes
+    the individual navbar elements.
+#}
+
+{% set navbar_expand = config.theme.navbar.expand ?? 'lg' %}
+
+<nav
+    class="navbar navbar-expand-{{ navbar_expand|e('html_attr') }}"
+    aria-label="{{ 'THEME_BASALT.ARIA.PRIMARY_NAVIGATION'|t|e('html_attr') }}"
+>
+    <div class="container">
+
+        {# Brand #}
+        {% include 'partials/components/navbar/brand.html.twig' %}
+
+        {# Mobile navigation toggler #}
+        {% include 'partials/components/navbar/toggler.html.twig' %}
+
+        {# Collapsible navigation content #}
+        <div id="main-navigation" class="collapse navbar-collapse">
+
+            {# Primary menu #}
+            {% include 'partials/components/navbar/menu.html.twig' %}
+
+            {# Optional search powered by SimpleSearch #}
+            {% if
+                (config.theme.navbar.search.enabled ?? false)
+                and (config.plugins.simplesearch.enabled ?? false)
+            %}
+                {% include 'partials/components/search/simplesearch.html.twig' %}
+            {% endif %}
+
+            {# Optional language switcher powered by LangSwitcher #}
+            {% if
+                (config.theme.navbar.language_switcher.enabled ?? true)
+                and (config.plugins.langswitcher.enabled ?? false)
+            %}
+                {% include 'partials/components/langswitcher/langswitcher.html.twig' %}
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
