@@ -7,6 +7,28 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-27
+
+### Added
+
+- Optional integration with the official Pagination plugin using accessible Bootstrap markup.
+- Generic collection page template with item and card variants, one-to-four-column responsive grids, empty states, translated read-more links and automatic pagination.
+- Reusable collection cover, image and responsive-image partials with Grav Media transformations, derivative generation and a built-in placeholder.
+- Generic Bootstrap Card, Accordion, Alert, Modal, Carousel and Tabs components for Twig composition.
+- Shortcode Core handlers and templates for Accordion, Alert, Modal, Carousel and Tabs.
+- Modular navbar partials with optional SimpleSearch, LangSwitcher and content-driven CTA integrations.
+- Admin blueprint fields for all supported navbar settings and expansion breakpoints.
+- Generic modular widget template for reusable trusted site content.
+- English and Polish translations for collection, modal, carousel, search and accessibility labels.
+
+### Changed
+
+- Refactored the primary navbar into separate brand, toggler, menu and optional integration partials.
+- Expanded the selected Bootstrap SCSS and JavaScript modules required by the new components.
+- Added theme styles for collection covers and cards.
+- Expanded the public child-theme override surface and project documentation.
+
+
 ## [0.7.0] - 2026-09-22
 
 ### Added
@@ -105,7 +127,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.4.0...v0.5.0

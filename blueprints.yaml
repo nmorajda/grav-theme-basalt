@@ -1,7 +1,7 @@
 name: Basalt
 slug: basalt
 type: theme
-version: 0.7.0
+version: 0.8.0
 description: A modular Bootstrap 5 base theme for Grav 2
 icon: cube
 
@@ -43,6 +43,67 @@ form:
       type: toggle
       label: Enable Bootstrap Icons
       help: Load the local Bootstrap Icons stylesheet and font files.
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    navbar.enabled:
+      type: toggle
+      label: Enable navbar
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    navbar.expand:
+      type: select
+      label: Navbar expansion breakpoint
+      help: Expand the navbar from the selected Bootstrap breakpoint.
+      default: lg
+      options:
+        sm: Small
+        md: Medium
+        lg: Large
+        xl: Extra large
+        xxl: Extra extra large
+      validate:
+        type: string
+
+    navbar.language_switcher.enabled:
+      type: toggle
+      label: Enable language switcher
+      help: Show the LangSwitcher integration when the plugin is enabled.
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    navbar.search.enabled:
+      type: toggle
+      label: Enable navbar search
+      help: Show the SimpleSearch integration when the plugin is enabled.
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    navbar.cta.enabled:
+      type: toggle
+      label: Enable navbar CTA
+      help: Show the content-driven call to action when its page exists.
       highlight: 1
       default: 1
       options:
