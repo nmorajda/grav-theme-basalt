@@ -1,0 +1,64 @@
+{#
+    Tabs shortcode wrapper.
+
+    Available shortcode parameters:
+    - id
+    - active
+
+    Child tab shortcodes are collected by TabsShortcode
+    and provided through "child_tabs".
+
+    The "active" parameter uses a 1-based tab index.
+#}
+
+{% set tabs_id = params.id ?? 'tabs-' ~ shortcode.position %}
+{% set active_index = params.active ?? 1 %}
+
+{% embed 'partials/components/tabs/tabs.html.twig' with {
+    id: tabs_id,
+    child_tabs: child_tabs,
+    active_index: active_index
+} only %}
+    {% block tabs_navigation %}
+        {% for tab in child_tabs %}
+            {% set item_id = tabs_id ~ '-item-' ~ loop.index %}
+            {% set tab_id = item_id ~ '-tab' %}
+            {% set panel_id = item_id ~ '-panel' %}
+            {% set active = loop.index == active_index %}
+
+            <li class="nav-item" role="presentation">
+                <button
+                    class="nav-link{{ active ? ' active' : '' }}"
+                    id="{{ tab_id|e('html_attr') }}"
+                    data-bs-toggle="tab"
+                    data-bs-target="#{{ panel_id|e('html_attr') }}"
+                    type="button"
+                    role="tab"
+                    aria-controls="{{ panel_id|e('html_attr') }}"
+                    aria-selected="{{ active ? 'true' : 'false' }}"
+                >
+                    {{ tab.getParameter('title', '') }}
+                </button>
+            </li>
+        {% endfor %}
+    {% endblock %}
+
+    {% block tabs_content %}
+        {% for tab in child_tabs %}
+            {% set item_id = tabs_id ~ '-item-' ~ loop.index %}
+            {% set tab_id = item_id ~ '-tab' %}
+            {% set panel_id = item_id ~ '-panel' %}
+            {% set active = loop.index == active_index %}
+
+            <div
+                class="tab-pane fade{{ active ? ' show active' : '' }}"
+                id="{{ panel_id|e('html_attr') }}"
+                role="tabpanel"
+                aria-labelledby="{{ tab_id|e('html_attr') }}"
+                tabindex="0"
+            >
+                {{ tab.getContent()|raw }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+{% endembed %}
