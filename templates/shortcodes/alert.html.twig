@@ -1,0 +1,23 @@
+{#
+    Alert shortcode wrapper.
+
+    Available shortcode parameters:
+    - variant
+    - dismissible
+
+    The shortcode content is rendered inside the alert component.
+#}
+
+{% set variant = params.variant ?? 'primary' %}
+{% set dismissible_value = params.dismissible ?? 'false' %}
+{% set dismissible = dismissible_value|lower in ['1', 'true', 'yes', 'on'] %}
+
+{% embed 'partials/components/alert/alert.html.twig' with {
+    variant: variant,
+    dismissible: dismissible,
+    content: content
+} only %}
+    {% block alert_content %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}

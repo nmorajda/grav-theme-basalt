@@ -3,6 +3,7 @@ en:
     SKIP_LINK: Skip to main content
     ARIA:
       BREADCRUMBS: Breadcrumbs
+      CLOSE: Close
       PAGINATION: Pagination
       PRIMARY_NAVIGATION: Primary navigation
     COLLECTION:
@@ -26,6 +27,7 @@ pl:
     SKIP_LINK: Przejdź do treści głównej
     ARIA:
       BREADCRUMBS: Ścieżka nawigacyjna
+      CLOSE: Zamknij
       PAGINATION: Paginacja
       PRIMARY_NAVIGATION: Nawigacja główna
     COLLECTION:
