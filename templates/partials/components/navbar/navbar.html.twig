@@ -33,6 +33,11 @@
                 {% include 'partials/components/search/simplesearch.html.twig' %}
             {% endif %}
 
+            {# Optional Navbar CTA #}
+            {% if config.theme.navbar.cta.enabled ?? false %}
+                {% include 'partials/components/navbar/cta.html.twig' %}
+            {% endif %}
+
             {# Optional language switcher powered by LangSwitcher #}
             {% if
                 (config.theme.navbar.language_switcher.enabled ?? true)

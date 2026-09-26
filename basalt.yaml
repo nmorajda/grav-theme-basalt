@@ -9,7 +9,13 @@ icons:
 navbar:
   enabled: true
   expand: lg
+
   language_switcher:
     enabled: true
+
   search:
     enabled: true
+
+  cta:
+    enabled: true
+

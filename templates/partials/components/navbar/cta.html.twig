@@ -1,0 +1,13 @@
+{#
+    Navbar CTA component.
+
+    Renders the content provided by the Navbar CTA page.
+#}
+
+{% set navbar_cta = pages.find('/_widgets/_navbar/_cta') %}
+
+{% if navbar_cta %}
+    <div class="navbar-cta">
+        {{ navbar_cta.content|raw }}
+    </div>
+{% endif %}
