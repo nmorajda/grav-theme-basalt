@@ -78,7 +78,7 @@
             {% endfor %}
         </div>
     {% else %}
-        {% embed 'partials/components/alert.html.twig' with {
+        {% embed 'partials/components/alert/alert.html.twig' with {
             variant: 'warning',
         } only %}
             {% block alert_content %}
