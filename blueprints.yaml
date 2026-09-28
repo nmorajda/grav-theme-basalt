@@ -28,86 +28,119 @@ form:
   validation: loose
 
   fields:
-    dropdown.enabled:
-      type: toggle
-      label: Enable dropdown navigation
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+    tabs:
+      type: tabs
+      active: 1
 
-    icons.enabled:
-      type: toggle
-      label: Enable Bootstrap Icons
-      help: Load the local Bootstrap Icons stylesheet and font files.
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+      fields:
+        general:
+          type: tab
+          title: General
 
-    navbar.enabled:
-      type: toggle
-      label: Enable navbar
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+          fields:
+            dropdown.enabled:
+              type: toggle
+              label: Enable dropdown navigation
+              highlight: 1
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
 
-    navbar.expand:
-      type: select
-      label: Navbar expansion breakpoint
-      help: Expand the navbar from the selected Bootstrap breakpoint.
-      default: lg
-      options:
-        sm: Small
-        md: Medium
-        lg: Large
-        xl: Extra large
-        xxl: Extra extra large
-      validate:
-        type: string
+            icons.enabled:
+              type: toggle
+              label: Enable Bootstrap Icons
+              help: Load the local Bootstrap Icons stylesheet and font files.
+              highlight: 1
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
 
-    navbar.language_switcher.enabled:
-      type: toggle
-      label: Enable language switcher
-      help: Show the LangSwitcher integration when the plugin is enabled.
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+        navbar:
+          type: tab
+          title: Navbar
 
-    navbar.search.enabled:
-      type: toggle
-      label: Enable navbar search
-      help: Show the SimpleSearch integration when the plugin is enabled.
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+          fields:
+            navbar_settings:
+              type: section
+              title: Navbar settings
+              underline: true
 
-    navbar.cta.enabled:
-      type: toggle
-      label: Enable navbar CTA
-      help: Show the content-driven call to action when its page exists.
-      highlight: 1
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
+              fields:
+                navbar.enabled:
+                  type: toggle
+                  label: Enable navbar
+                  highlight: 1
+                  default: 1
+                  options:
+                    1: PLUGIN_ADMIN.ENABLED
+                    0: PLUGIN_ADMIN.DISABLED
+                  validate:
+                    type: bool
+
+                navbar.expand:
+                  type: select
+                  label: Navbar expansion breakpoint
+                  help: Expand the navbar from the selected Bootstrap breakpoint.
+                  default: lg
+                  options:
+                    sm: Small
+                    md: Medium
+                    lg: Large
+                    xl: Extra large
+                    xxl: Extra extra large
+                  validate:
+                    type: string
+
+            navbar_integrations:
+              type: section
+              title: Integrations
+              underline: true
+
+              fields:
+                navbar.language_switcher.enabled:
+                  type: toggle
+                  label: Enable language switcher
+                  help: Show the LangSwitcher integration when the plugin is enabled.
+                  highlight: 1
+                  default: 1
+                  options:
+                    1: PLUGIN_ADMIN.ENABLED
+                    0: PLUGIN_ADMIN.DISABLED
+                  validate:
+                    type: bool
+
+                navbar.search.enabled:
+                  type: toggle
+                  label: Enable navbar search
+                  help: Show the SimpleSearch integration when the plugin is enabled.
+                  highlight: 1
+                  default: 1
+                  options:
+                    1: PLUGIN_ADMIN.ENABLED
+                    0: PLUGIN_ADMIN.DISABLED
+                  validate:
+                    type: bool
+
+            navbar_cta:
+              type: section
+              title: Call to action
+              underline: true
+
+              fields:
+                navbar.cta.enabled:
+                  type: toggle
+                  label: Enable navbar CTA
+                  help: Show the content-driven call to action when its page exists.
+                  highlight: 1
+                  default: 1
+                  options:
+                    1: PLUGIN_ADMIN.ENABLED
+                    0: PLUGIN_ADMIN.DISABLED
+                  validate:
+                    type: bool
