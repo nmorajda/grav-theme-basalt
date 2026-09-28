@@ -903,7 +903,7 @@ The following templates and partials are public override points for child themes
 | `templates/partials/collection/cover.html.twig` | Resolves a media cover or placeholder. |
 | `templates/partials/elements/image.html.twig` | Renders a direct URL or transformed Grav Media image. |
 | `templates/partials/elements/responsive-image.html.twig` | Renders Grav Media derivatives with `srcset` and `sizes`. |
-| `templates/partials/components/card.html.twig` | Generic Card with section blocks. |
+| `templates/partials/components/card/card.html.twig` | Generic Card with section blocks. |
 | `templates/partials/components/accordion/accordion.html.twig` | Generic Accordion wrapper with `accordion_items` block. |
 | `templates/partials/components/accordion/item.html.twig` | Generic Accordion item with header and content blocks. |
 | `templates/partials/components/alert/alert.html.twig` | Generic Alert with optional dismiss button. |
