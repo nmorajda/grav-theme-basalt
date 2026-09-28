@@ -7,7 +7,10 @@
     - display the title, summary, and "Read more" link,
     - keep the card at full height within the grid.
 
-    The generic Bootstrap Card structure is defined in:
+    The public Card adapter is defined in:
+    templates/partials/components/card.html.twig
+
+    The canonical Card component is defined in:
     templates/partials/components/card/card.html.twig
 
     Shared cover logic is handled by:
@@ -22,7 +25,7 @@
 #}
 
 
-{% embed 'partials/components/card/card.html.twig' with {
+{% embed 'partials/components/card.html.twig' with {
     tag: 'div',
     classes: 'h-100',
     page: page,

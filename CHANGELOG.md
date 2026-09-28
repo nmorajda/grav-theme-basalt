@@ -7,6 +7,15 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-09-28
+
+### Changed
+
+- Organized the Grav Admin theme configuration into General and Navbar tabs with grouped navbar settings, integrations and call-to-action controls.
+- Moved the canonical Card component to `partials/components/card/card.html.twig` while retaining the previous public path as a child-theme compatibility adapter.
+- Kept the plugin-compatible Breadcrumbs and Pagination override partials at their public paths while delegating rendering to dedicated component directories.
+- Refreshed the theme thumbnail used in Grav Admin.
+
 ## [0.8.0] - 2026-09-27
 
 ### Added
@@ -127,7 +136,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.5.0...v0.6.0

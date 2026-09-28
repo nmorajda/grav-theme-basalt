@@ -390,7 +390,7 @@ projects.
 The main JavaScript entry file is `src/js/script.js`. It imports
 `src/js/modules/bootstrap.js` and applies the `js` class to the document root.
 
-Basalt 0.8.0 bundles these Bootstrap JavaScript modules:
+Basalt bundles these Bootstrap JavaScript modules:
 
 - Alert
 - Button
@@ -443,7 +443,9 @@ navbar:
 ```
 
 All settings shown above are available in the Admin blueprint and can also be
-configured directly in the theme YAML. `navbar.expand` maps to one of the
+configured directly in the theme YAML. The General tab contains dropdown and
+icon settings. The Navbar tab groups the main navbar options, plugin
+integrations and call-to-action control. `navbar.expand` maps to one of the
 supported Bootstrap `navbar-expand-*` breakpoints: `sm`, `md`, `lg`, `xl` or
 `xxl`.
 
@@ -554,9 +556,12 @@ Bootstrap supplies the breadcrumb divider. Breadcrumbs is intentionally not
 listed as a Basalt dependency in `blueprints.yaml`, so the theme continues to
 work when the plugin is absent.
 
-The public breadcrumb partial keeps its accessible navigation markup separate
-from its Schema.org data. It delegates JSON-LD generation to an internal partial
-and emits the structured data only when the trail contains at least two items.
+The plugin-compatible adapter remains at
+`templates/partials/breadcrumbs.html.twig` and delegates visible output to the
+public `templates/partials/components/breadcrumbs/breadcrumbs.html.twig`
+component. Accessible navigation markup remains separate from Schema.org
+JSON-LD. The internal `schema.html.twig` partial emits structured data only when
+the trail contains at least two items.
 
 ## Optional pagination
 
@@ -588,11 +593,15 @@ the page template that renders the collection:
 } %}
 ```
 
-The partial renders only when the plugin is enabled and the pagination helper
-contains more than one page. Its default values remain compatible with the
-official plugin partial: `page.url` supplies `base_url`, and
-`page.collection.params.pagination` supplies `pagination`. Pagination remains
-an optional integration and is not listed as a dependency in `blueprints.yaml`.
+The plugin-compatible adapter remains at
+`templates/partials/pagination.html.twig`. It checks the optional plugin,
+provides the official defaults and delegates markup to the public
+`templates/partials/components/pagination/pagination.html.twig` component. The
+component renders only when the pagination helper contains more than one page.
+The adapter defaults remain compatible with the official plugin partial:
+`page.url` supplies `base_url`, and `page.collection.params.pagination` supplies
+`pagination`. Pagination remains optional and is not listed as a dependency in
+`blueprints.yaml`.
 
 ## Collection template
 
@@ -819,7 +828,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.8.0'
+    version: '>=0.8.1'
 ```
 
 ### Extending parent templates
@@ -834,7 +843,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.8.0:
+0.8.1:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -867,7 +876,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.8.0.
+are not part of the stable public Twig API for Basalt 0.8.1.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -896,14 +905,17 @@ The following templates and partials are public override points for child themes
 | `templates/partials/components/navbar/cta.html.twig` | Renders the `/_widgets/_navbar/_cta` page. |
 | `templates/partials/components/search/simplesearch.html.twig` | Renders the optional SimpleSearch form. |
 | `templates/partials/components/langswitcher/langswitcher.html.twig` | Extends the optional LangSwitcher logic partial. |
-| `templates/partials/breadcrumbs.html.twig` | Renders optional Breadcrumbs data and delegates JSON-LD generation internally. |
-| `templates/partials/pagination.html.twig` | Renders optional Pagination data for an explicit collection. |
+| `templates/partials/breadcrumbs.html.twig` | Keeps the plugin-compatible Breadcrumbs override path and delegates rendering to the component. |
+| `templates/partials/components/breadcrumbs/breadcrumbs.html.twig` | Renders accessible Breadcrumbs markup and delegates internal JSON-LD generation. |
+| `templates/partials/pagination.html.twig` | Keeps the plugin-compatible Pagination override path, defaults and plugin guard. |
+| `templates/partials/components/pagination/pagination.html.twig` | Renders pagination markup for supplied `pagination` and `base_url` values. |
 | `templates/partials/collection/item.html.twig` | Renders the default collection item variant. |
 | `templates/partials/collection/card.html.twig` | Renders the Bootstrap Card collection variant. |
 | `templates/partials/collection/cover.html.twig` | Resolves a media cover or placeholder. |
 | `templates/partials/elements/image.html.twig` | Renders a direct URL or transformed Grav Media image. |
 | `templates/partials/elements/responsive-image.html.twig` | Renders Grav Media derivatives with `srcset` and `sizes`. |
-| `templates/partials/components/card/card.html.twig` | Generic Card with section blocks. |
+| `templates/partials/components/card.html.twig` | Preserves the Basalt 0.8.0 public Card override path and delegates to the canonical component. |
+| `templates/partials/components/card/card.html.twig` | Canonical Card component with section blocks. |
 | `templates/partials/components/accordion/accordion.html.twig` | Generic Accordion wrapper with `accordion_items` block. |
 | `templates/partials/components/accordion/item.html.twig` | Generic Accordion item with header and content blocks. |
 | `templates/partials/components/alert/alert.html.twig` | Generic Alert with optional dismiss button. |
@@ -1057,13 +1069,16 @@ basalt/
 │   │   ├── components/
 │   │   │   ├── accordion/
 │   │   │   ├── alert/
+│   │   │   ├── breadcrumbs/
+│   │   │   ├── card/
+│   │   │   ├── card.html.twig
 │   │   │   ├── carousel/
 │   │   │   ├── langswitcher/
 │   │   │   ├── modal/
 │   │   │   ├── navbar/
+│   │   │   ├── pagination/
 │   │   │   ├── search/
-│   │   │   ├── tabs/
-│   │   │   └── card.html.twig
+│   │   │   └── tabs/
 │   │   ├── elements/
 │   │   ├── base.html.twig
 │   │   ├── breadcrumbs.html.twig
