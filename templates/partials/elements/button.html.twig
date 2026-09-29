@@ -1,0 +1,102 @@
+{#
+    Button element.
+
+    Available parameters:
+    - label
+    - variant
+    - size
+    - type
+    - href
+    - disabled
+    - classes
+    - attributes
+
+    Examples:
+
+    Basic button:
+    {% include 'partials/elements/button.html.twig' with {
+        label: 'Save',
+        variant: 'primary',
+        type: 'submit'
+    } %}
+
+    Link styled as a button:
+    {% include 'partials/elements/button.html.twig' with {
+        label: 'Learn more',
+        variant: 'outline-primary',
+        href: '/about'
+    } %}
+
+    Bootstrap component trigger:
+    {% include 'partials/elements/button.html.twig' with {
+        label: 'Open modal',
+        attributes: {
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#exampleModal',
+            'aria-controls': 'exampleModal'
+        }
+    } %}
+#}
+
+{% set variant = variant|default('primary') %}
+{% set size = size|default(null) %}
+{% set type = type|default('button') %}
+{% set href = href|default(null) %}
+{% set disabled = disabled|default(false) %}
+{% set classes = classes|default('') %}
+{% set attributes = attributes|default({}) %}
+
+{% set button_classes = [
+    'btn',
+    'btn-' ~ variant,
+    size ? 'btn-' ~ size : '',
+    href and disabled ? 'disabled' : '',
+    classes
+]|filter(v => v)|join(' ') %}
+
+{% if href %}
+    <a
+        class="{{ button_classes }}"
+        {% if not disabled %}href="{{ href }}"{% endif %}
+        {% if disabled %}
+            aria-disabled="true"
+            tabindex="-1"
+        {% endif %}
+        {% for name, value in attributes %}
+            {% if name not in ['class', 'href'] and (not disabled or name not in ['aria-disabled', 'tabindex']) %}
+                {% if name starts with 'aria-' or name starts with 'data-' %}
+                    {% if value is not null %}
+                        {{ name }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
+                    {% endif %}
+                {% elseif value is same as(true) %}
+                    {{ name }}
+                {% elseif value is not same as(false) and value is not null %}
+                    {{ name }}="{{ value }}"
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    >
+        {{ label }}
+    </a>
+{% else %}
+    <button
+        type="{{ type }}"
+        class="{{ button_classes }}"
+        {% if disabled %}disabled{% endif %}
+        {% for name, value in attributes %}
+            {% if name not in ['class', 'type', 'disabled'] %}
+                {% if name starts with 'aria-' or name starts with 'data-' %}
+                    {% if value is not null %}
+                        {{ name }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
+                    {% endif %}
+                {% elseif value is same as(true) %}
+                    {{ name }}
+                {% elseif value is not same as(false) and value is not null %}
+                    {{ name }}="{{ value }}"
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    >
+        {{ label }}
+    </button>
+{% endif %}
