@@ -1,0 +1,31 @@
+{#
+    Button shortcode wrapper.
+
+    Available shortcode parameters:
+    - href
+    - variant
+    - size
+    - type
+    - disabled
+    - classes
+
+    Examples:
+
+    [button href="/about"]Learn more[/button]
+
+    [button href="/contact" variant="outline-primary" size="lg"]
+        Contact us
+    [/button]
+#}
+
+{% set disabled = (params.disabled|default(false)) in [true, 1, '1', 'true', 'yes', 'on'] %}
+
+{% include 'partials/elements/button.html.twig' with {
+    label: content,
+    variant: params.variant|default('primary'),
+    size: params.size|default(null),
+    type: params.type|default('button'),
+    href: params.href|default(null),
+    disabled: disabled,
+    classes: params.classes|default('')
+} only %}
