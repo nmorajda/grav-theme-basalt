@@ -20,8 +20,8 @@ complete Bootstrap CSS and JavaScript bundles.
 - generic collection template with item and card variants
 - responsive collection grids with one to four columns
 - reusable image and responsive-image renderers using Grav Media
-- reusable Card, Accordion, Alert, Modal, Carousel and Tabs components
-- Shortcode Core handlers for Accordion, Alert, Modal, Carousel and Tabs
+- reusable Button element plus Card, Accordion, Alert, Modal, Carousel and Tabs components
+- Shortcode Core handlers for Accordion, Alert, Button, Carousel, Modal and Tabs
 - local Bootstrap Icons and font extension points
 - Gulp, Sass and esbuild development and production tasks
 - optional manifest-controlled vendor CSS and JavaScript bundles
@@ -727,6 +727,45 @@ Check this message before continuing.
 [/alert]
 ```
 
+### Button
+
+The public `templates/partials/elements/button.html.twig` element accepts
+`label`, `variant`, `size`, `type`, `href`, `disabled`, `classes` and
+`attributes`. Without `href` it renders a native button. With `href` it renders
+a link styled as a Bootstrap button.
+
+```twig
+{% include 'partials/elements/button.html.twig' with {
+    label: 'Save',
+    variant: 'primary',
+    type: 'submit'
+} only %}
+
+{% include 'partials/elements/button.html.twig' with {
+    label: 'Learn more',
+    variant: 'outline-primary',
+    href: '/about'
+} only %}
+
+{% include 'partials/elements/button.html.twig' with {
+    label: 'Open modal',
+    attributes: {
+        'data-bs-toggle': 'modal',
+        'data-bs-target': '#exampleModal',
+        'aria-controls': 'exampleModal'
+    }
+} only %}
+```
+
+The `[button]` shortcode accepts `href`, `variant`, `size`, `type`, `disabled`
+and `classes`. Content between the opening and closing shortcode tags provides
+the button label.
+
+```text
+[button href="/about"]Learn more[/button]
+[button href="/contact" variant="outline-primary" size="lg"]Contact us[/button]
+```
+
 ### Modal
 
 Parameters: `id`, `title`, `label`, `size` (`sm`, `lg` or `xl`),
@@ -828,7 +867,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.8.1'
+    version: '>=0.8.2'
 ```
 
 ### Extending parent templates
@@ -843,7 +882,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.8.1:
+0.8.2:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -876,7 +915,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.8.1.
+are not part of the stable public Twig API for Basalt 0.8.2.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -914,6 +953,7 @@ The following templates and partials are public override points for child themes
 | `templates/partials/collection/cover.html.twig` | Resolves a media cover or placeholder. |
 | `templates/partials/elements/image.html.twig` | Renders a direct URL or transformed Grav Media image. |
 | `templates/partials/elements/responsive-image.html.twig` | Renders Grav Media derivatives with `srcset` and `sizes`. |
+| `templates/partials/elements/button.html.twig` | Renders a Bootstrap button or button-styled link with optional state, classes and attributes. |
 | `templates/partials/components/card.html.twig` | Preserves the Basalt 0.8.0 public Card override path and delegates to the canonical component. |
 | `templates/partials/components/card/card.html.twig` | Canonical Card component with section blocks. |
 | `templates/partials/components/accordion/accordion.html.twig` | Generic Accordion wrapper with `accordion_items` block. |
@@ -1038,6 +1078,7 @@ basalt/
 │   ├── AccordionShortcode.php
 │   ├── AccordionItemShortcode.php
 │   ├── AlertShortcode.php
+│   ├── ButtonShortcode.php
 │   ├── CarouselShortcode.php
 │   ├── CarouselItemShortcode.php
 │   ├── ModalShortcode.php

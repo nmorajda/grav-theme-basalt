@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-09-29
+
+### Added
+
+- Reusable Bootstrap Button Twig element for buttons, links, disabled states, custom classes and component-trigger attributes.
+- Shortcode Core `[button]` handler with enclosed label content and configurable link, variant, size, type, disabled state and classes.
+
 ## [0.8.1] - 2026-09-28
 
 ### Changed
@@ -136,7 +143,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.6.0...v0.7.0
