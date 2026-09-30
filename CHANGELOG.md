@@ -7,6 +7,18 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-09-30
+
+### Added
+
+- Public Icon, Badge, Close Button, Link and Spinner Twig elements with reusable attribute APIs and accessible defaults.
+- Shortcode Core handlers for `[icon]` and namespaced `[basalt-badge]` editorial content.
+- English and Polish loading labels for the accessible Spinner status.
+
+### Fixed
+
+- Parsed the Badge shortcode `pill` parameter strictly so false-like text values no longer enable the pill style.
+
 ## [0.8.2] - 2026-09-29
 
 ### Added
@@ -143,7 +155,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.7.0...v0.8.0

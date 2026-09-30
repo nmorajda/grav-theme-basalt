@@ -20,8 +20,9 @@ complete Bootstrap CSS and JavaScript bundles.
 - generic collection template with item and card variants
 - responsive collection grids with one to four columns
 - reusable image and responsive-image renderers using Grav Media
-- reusable Button element plus Card, Accordion, Alert, Modal, Carousel and Tabs components
-- Shortcode Core handlers for Accordion, Alert, Button, Carousel, Modal and Tabs
+- reusable Button, Icon, Badge, Close Button, Link and Spinner elements
+- reusable Card, Accordion, Alert, Modal, Carousel and Tabs components
+- Shortcode Core handlers for Accordion, Alert, Badge, Button, Carousel, Icon, Modal and Tabs
 - local Bootstrap Icons and font extension points
 - Gulp, Sass and esbuild development and production tasks
 - optional manifest-controlled vendor CSS and JavaScript bundles
@@ -766,6 +767,125 @@ the button label.
 [button href="/contact" variant="outline-primary" size="lg"]Contact us[/button]
 ```
 
+### Icon
+
+The public `templates/partials/elements/icon.html.twig` element accepts
+`name`, `label`, `classes` and `attributes`. An icon without `label` is
+decorative and receives `aria-hidden="true"`. A label exposes the icon as an
+image with an accessible name.
+
+```twig
+{% include 'partials/elements/icon.html.twig' with {
+    name: 'house'
+} only %}
+
+{% include 'partials/elements/icon.html.twig' with {
+    name: 'download',
+    label: 'Download',
+    classes: 'fs-4'
+} only %}
+```
+
+The `[icon]` shortcode accepts `name`, `label` and `classes`. The required
+`name` selects a Bootstrap Icon.
+
+```text
+[icon name="house"]
+[icon name="download" label="Download" classes="fs-4"]
+```
+
+### Badge
+
+The public `templates/partials/elements/badge.html.twig` element accepts
+`label`, `variant`, `pill`, `classes` and `attributes`. The default variant
+is `primary`; enabling `pill` adds `rounded-pill`.
+
+```twig
+{% include 'partials/elements/badge.html.twig' with {
+    label: 'New'
+} only %}
+
+{% include 'partials/elements/badge.html.twig' with {
+    label: 'Active',
+    variant: 'success',
+    pill: true
+} only %}
+```
+
+The shortcode is named `[basalt-badge]` because the shorter `[badge]` name
+can collide with a shortcode supplied by Shortcode Core. It accepts `variant`,
+`pill` and `classes`; enclosed content supplies the label.
+
+```text
+[basalt-badge]New[/basalt-badge]
+[basalt-badge variant="danger" pill="true"]3[/basalt-badge]
+```
+
+### Close Button
+
+The public `templates/partials/elements/close-button.html.twig` element accepts
+`label`, `disabled`, `classes` and `attributes`. Its default accessible
+label uses `THEME_BASALT.ARIA.CLOSE`.
+
+```twig
+{% include 'partials/elements/close-button.html.twig' %}
+
+{% include 'partials/elements/close-button.html.twig' with {
+    attributes: {
+        'data-bs-theme': 'dark'
+    }
+} only %}
+
+{% include 'partials/elements/close-button.html.twig' with {
+    attributes: {
+        'data-bs-dismiss': 'modal'
+    }
+} only %}
+```
+
+Use Bootstrap's current `data-bs-theme="dark"` approach when the close button
+needs light artwork on a dark background.
+
+### Link
+
+The public `templates/partials/elements/link.html.twig` element accepts
+`label`, `href`, `target`, `rel`, `classes` and `attributes`. A link
+using `target="_blank"` receives `rel="noopener"` unless `rel` is supplied
+explicitly.
+
+```twig
+{% include 'partials/elements/link.html.twig' with {
+    label: 'About us',
+    href: '/about'
+} only %}
+
+{% include 'partials/elements/link.html.twig' with {
+    label: 'External documentation',
+    href: 'https://example.com/docs',
+    target: '_blank',
+    classes: 'fw-semibold'
+} only %}
+```
+
+### Spinner
+
+The public `templates/partials/elements/spinner.html.twig` element accepts
+`type` (`border` or `grow`), `variant`, `size`, `label`, `classes` and
+`attributes`. The default type is `border`. The supported small size is
+`sm`, and the default visually hidden label uses
+`THEME_BASALT.ARIA.LOADING`.
+
+```twig
+{% include 'partials/elements/spinner.html.twig' %}
+
+{% include 'partials/elements/spinner.html.twig' with {
+    type: 'grow',
+    variant: 'primary',
+    size: 'sm',
+    label: 'Saving'
+} only %}
+```
+
 ### Modal
 
 Parameters: `id`, `title`, `label`, `size` (`sm`, `lg` or `xl`),
@@ -867,7 +987,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.8.2'
+    version: '>=0.8.3'
 ```
 
 ### Extending parent templates
@@ -882,7 +1002,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.8.2:
+0.8.3:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -915,7 +1035,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.8.2.
+are not part of the stable public Twig API for Basalt 0.8.3.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -954,6 +1074,11 @@ The following templates and partials are public override points for child themes
 | `templates/partials/elements/image.html.twig` | Renders a direct URL or transformed Grav Media image. |
 | `templates/partials/elements/responsive-image.html.twig` | Renders Grav Media derivatives with `srcset` and `sizes`. |
 | `templates/partials/elements/button.html.twig` | Renders a Bootstrap button or button-styled link with optional state, classes and attributes. |
+| `templates/partials/elements/icon.html.twig` | Renders decorative or accessibly labelled Bootstrap Icons. |
+| `templates/partials/elements/badge.html.twig` | Renders a Bootstrap Badge with optional variant and pill styling. |
+| `templates/partials/elements/close-button.html.twig` | Renders an accessible Bootstrap Close Button for component controls. |
+| `templates/partials/elements/link.html.twig` | Renders a link with controlled target, relationship, classes and attributes. |
+| `templates/partials/elements/spinner.html.twig` | Renders an accessible Bootstrap border or grow Spinner. |
 | `templates/partials/components/card.html.twig` | Preserves the Basalt 0.8.0 public Card override path and delegates to the canonical component. |
 | `templates/partials/components/card/card.html.twig` | Canonical Card component with section blocks. |
 | `templates/partials/components/accordion/accordion.html.twig` | Generic Accordion wrapper with `accordion_items` block. |
@@ -1078,9 +1203,11 @@ basalt/
 │   ├── AccordionShortcode.php
 │   ├── AccordionItemShortcode.php
 │   ├── AlertShortcode.php
+│   ├── BadgeShortcode.php
 │   ├── ButtonShortcode.php
 │   ├── CarouselShortcode.php
 │   ├── CarouselItemShortcode.php
+│   ├── IconShortcode.php
 │   ├── ModalShortcode.php
 │   ├── TabsShortcode.php
 │   └── TabShortcode.php

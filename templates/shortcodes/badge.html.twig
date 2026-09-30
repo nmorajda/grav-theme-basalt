@@ -15,7 +15,14 @@
     [basalt-badge variant="danger" pill="true"]3[/basalt-badge]
 #}
 
-{% set pill = (params.pill|default(false)) in [true, 1, '1', 'true', 'yes', 'on'] %}
+{% set pill_value = params.pill|default(false) %}
+{% set pill = pill_value is same as(true)
+    or pill_value is same as(1)
+    or pill_value is same as('1')
+    or pill_value is same as('true')
+    or pill_value is same as('yes')
+    or pill_value is same as('on')
+%}
 
 {% include 'partials/elements/badge.html.twig' with {
     label: content,
