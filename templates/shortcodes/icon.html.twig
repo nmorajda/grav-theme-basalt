@@ -1,0 +1,24 @@
+{#
+    Icon shortcode wrapper.
+
+    Available shortcode parameters:
+    - name
+    - label
+    - classes
+
+    Examples:
+
+    [icon name="house"]
+
+    [icon name="download" label="Download"]
+
+    [icon name="check-circle" classes="fs-3 text-success"]
+#}
+
+{% if params.name|default(null) %}
+    {% include 'partials/elements/icon.html.twig' with {
+        name: params.name,
+        label: params.label|default(null),
+        classes: params.classes|default('')
+    } only %}
+{% endif %}
