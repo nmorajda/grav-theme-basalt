@@ -4,6 +4,7 @@ en:
     ARIA:
       BREADCRUMBS: Breadcrumbs
       CLOSE: Close
+      LOADING: Loading
       PAGINATION: Pagination
       PRIMARY_NAVIGATION: Primary navigation
     COLLECTION:
@@ -28,6 +29,7 @@ pl:
     ARIA:
       BREADCRUMBS: Ścieżka nawigacyjna
       CLOSE: Zamknij
+      LOADING: Ładowanie
       PAGINATION: Paginacja
       PRIMARY_NAVIGATION: Nawigacja główna
     COLLECTION:

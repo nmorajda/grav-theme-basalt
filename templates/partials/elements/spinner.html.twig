@@ -1,0 +1,66 @@
+{#
+    Spinner element.
+
+    Available parameters:
+    - type
+    - variant
+    - size
+    - label
+    - classes
+    - attributes
+
+    Examples:
+
+    Default border spinner:
+    {% include 'partials/elements/spinner.html.twig' %}
+
+    Grow spinner:
+    {% include 'partials/elements/spinner.html.twig' with {
+        type: 'grow'
+    } %}
+
+    Primary spinner:
+    {% include 'partials/elements/spinner.html.twig' with {
+        variant: 'primary'
+    } %}
+
+    Small spinner:
+    {% include 'partials/elements/spinner.html.twig' with {
+        size: 'sm'
+    } %}
+#}
+
+{% set type = type|default('border') %}
+{% set type = type in ['border', 'grow'] ? type : 'border' %}
+{% set variant = variant|default(null) %}
+{% set size = size|default(null) %}
+{% set label = label|default('THEME_BASALT.ARIA.LOADING'|t) %}
+{% set classes = classes|default('') %}
+{% set attributes = attributes|default({}) %}
+
+{% set spinner_classes = [
+    'spinner-' ~ type,
+    variant ? 'text-' ~ variant : '',
+    size == 'sm' ? 'spinner-' ~ type ~ '-sm' : '',
+    classes
+]|filter(v => v)|join(' ') %}
+
+<span
+    class="{{ spinner_classes }}"
+    role="status"
+    {% for attribute, value in attributes %}
+        {% if attribute not in ['class', 'role'] %}
+            {% if attribute starts with 'aria-' or attribute starts with 'data-' %}
+                {% if value is not null %}
+                    {{ attribute }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
+                {% endif %}
+            {% elseif value is same as(true) %}
+                {{ attribute }}
+            {% elseif value is not same as(false) and value is not null %}
+                {{ attribute }}="{{ value }}"
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+>
+    <span class="visually-hidden">{{ label }}</span>
+</span>
