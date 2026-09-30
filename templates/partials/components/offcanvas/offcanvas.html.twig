@@ -1,0 +1,145 @@
+{#
+    Generic Bootstrap Offcanvas component.
+
+    Parameters:
+    - id: Required unique offcanvas ID.
+    - title: Optional visible offcanvas title.
+    - label: Accessible label required when title is not provided.
+    - placement: Offcanvas placement: start, end, top or bottom.
+    - scroll: Allows body scrolling while the offcanvas is open.
+    - backdrop: Backdrop behavior: true, false or static.
+    - keyboard: Closes the offcanvas when Escape is pressed.
+    - responsive: Optional responsive breakpoint: sm, md, lg, xl or xxl.
+    - classes: Additional CSS classes.
+    - attributes: Additional HTML attributes.
+
+    Blocks:
+    - body: Main offcanvas content.
+
+    Example:
+
+    {% embed 'partials/components/offcanvas/offcanvas.html.twig' with {
+        id: 'example-offcanvas',
+        title: 'Menu',
+        placement: 'start'
+    } only %}
+        {% block body %}
+            Offcanvas content.
+        {% endblock %}
+    {% endembed %}
+
+    Responsive example:
+
+    {% embed 'partials/components/offcanvas/offcanvas.html.twig' with {
+        id: 'responsive-offcanvas',
+        title: 'Navigation',
+        placement: 'start',
+        responsive: 'lg',
+        scroll: true
+    } only %}
+        {% block body %}
+            Responsive offcanvas content.
+        {% endblock %}
+    {% endembed %}
+#}
+
+{% set offcanvas_id = id ?? null %}
+{% set offcanvas_title = title ?? null %}
+{% set offcanvas_label = label ?? null %}
+{% set offcanvas_placement = placement ?? 'start' %}
+{% set offcanvas_scroll = scroll ?? false %}
+{% set offcanvas_backdrop = backdrop ?? true %}
+{% set offcanvas_keyboard = keyboard ?? true %}
+{% set offcanvas_responsive = responsive ?? null %}
+{% set classes = classes ?? '' %}
+{% set attributes = attributes ?? {} %}
+
+{% if offcanvas_placement not in ['start', 'end', 'top', 'bottom'] %}
+    {% set offcanvas_placement = 'start' %}
+{% endif %}
+
+{% if offcanvas_responsive not in ['sm', 'md', 'lg', 'xl', 'xxl'] %}
+    {% set offcanvas_responsive = null %}
+{% endif %}
+
+{% if offcanvas_backdrop is not same as(false) and offcanvas_backdrop is not same as('static') %}
+    {% set offcanvas_backdrop = true %}
+{% endif %}
+
+{% set offcanvas_base_class = offcanvas_responsive
+    ? 'offcanvas-' ~ offcanvas_responsive
+    : 'offcanvas'
+%}
+
+{% set offcanvas_classes = [
+    offcanvas_base_class,
+    'offcanvas-' ~ offcanvas_placement,
+    classes
+]|filter(v => v)|join(' ') %}
+
+{% if offcanvas_id %}
+    <div
+        id="{{ offcanvas_id|e('html_attr') }}"
+        class="{{ offcanvas_classes|e('html_attr') }}"
+        tabindex="-1"
+        data-bs-scroll="{{ offcanvas_scroll ? 'true' : 'false' }}"
+        data-bs-backdrop="{{ offcanvas_backdrop is same as(false) ? 'false' : (offcanvas_backdrop is same as('static') ? 'static' : 'true') }}"
+        data-bs-keyboard="{{ offcanvas_keyboard ? 'true' : 'false' }}"
+        {% if offcanvas_title %}
+            aria-labelledby="{{ (offcanvas_id ~ '-title')|e('html_attr') }}"
+        {% elseif offcanvas_label %}
+            aria-label="{{ offcanvas_label|e('html_attr') }}"
+        {% endif %}
+        {% for attribute, value in attributes %}
+            {% if attribute not in [
+                'id',
+                'class',
+                'tabindex',
+                'aria-labelledby',
+                'aria-label',
+                'data-bs-scroll',
+                'data-bs-backdrop',
+                'data-bs-keyboard'
+            ] %}
+                {% if attribute starts with 'aria-' or attribute starts with 'data-' %}
+                    {% if value is not null %}
+                        {{ attribute }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
+                    {% endif %}
+                {% elseif value is same as(true) %}
+                    {{ attribute }}
+                {% elseif value is not same as(false) and value is not null %}
+                    {{ attribute }}="{{ value }}"
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    >
+        <div class="offcanvas-header">
+            {% if offcanvas_title %}
+                <h2
+                    id="{{ (offcanvas_id ~ '-title')|e('html_attr') }}"
+                    class="offcanvas-title"
+                >
+                    {{ offcanvas_title|e }}
+                </h2>
+            {% endif %}
+
+            {% set close_attributes = {
+                'data-bs-dismiss': 'offcanvas'
+            } %}
+
+            {% if offcanvas_responsive %}
+                {% set close_attributes = close_attributes|merge({
+                    'data-bs-target': '#' ~ offcanvas_id
+                }) %}
+            {% endif %}
+
+            {% include 'partials/elements/close-button.html.twig' with {
+                attributes: close_attributes
+            } only %}
+        </div>
+
+        <div class="offcanvas-body">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+{% endif %}
