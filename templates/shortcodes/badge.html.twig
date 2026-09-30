@@ -1,0 +1,25 @@
+{#
+    Badge shortcode wrapper.
+
+    Available shortcode parameters:
+    - variant
+    - pill
+    - classes
+
+    Examples:
+
+    [basalt-badge]New[/basalt-badge]
+
+    [basalt-badge variant="success"]Active[/basalt-badge]
+
+    [basalt-badge variant="danger" pill="true"]3[/basalt-badge]
+#}
+
+{% set pill = (params.pill|default(false)) in [true, 1, '1', 'true', 'yes', 'on'] %}
+
+{% include 'partials/elements/badge.html.twig' with {
+    label: content,
+    variant: params.variant|default('primary'),
+    pill: pill,
+    classes: params.classes|default('')
+} only %}
