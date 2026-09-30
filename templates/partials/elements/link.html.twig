@@ -1,0 +1,68 @@
+{#
+    Link element.
+
+    Available parameters:
+    - label
+    - href
+    - target
+    - rel
+    - classes
+    - attributes
+
+    Examples:
+
+    Internal link:
+    {% include 'partials/elements/link.html.twig' with {
+        label: 'About us',
+        href: '/about'
+    } %}
+
+    External link:
+    {% include 'partials/elements/link.html.twig' with {
+        label: 'External documentation',
+        href: 'https://example.com/docs',
+        target: '_blank'
+    } %}
+
+    Link with additional classes and attributes:
+    {% include 'partials/elements/link.html.twig' with {
+        label: 'Contact us',
+        href: '/contact',
+        classes: 'fw-semibold',
+        attributes: {
+            'aria-label': 'Contact our team',
+            'data-track': 'contact-link'
+        }
+    } %}
+#}
+
+{% set target = target|default(null) %}
+{% set rel = rel|default(null) %}
+{% set classes = classes|default('') %}
+{% set attributes = attributes|default({}) %}
+
+{% if target == '_blank' and not rel %}
+    {% set rel = 'noopener' %}
+{% endif %}
+
+<a
+    href="{{ href }}"
+    {% if target %}target="{{ target }}"{% endif %}
+    {% if rel %}rel="{{ rel }}"{% endif %}
+    {% if classes %}class="{{ classes }}"{% endif %}
+    {% for attribute, value in attributes %}
+        {% if attribute not in ['href', 'target', 'rel', 'class'] %}
+            {% if attribute starts with 'aria-' or attribute starts with 'data-' %}
+                {% if value is not null %}
+                    {{ attribute }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
+                {% endif %}
+            {% elseif value is same as(true) %}
+                {{ attribute }}
+            {% elseif value is not same as(false) and value is not null %}
+                {{ attribute }}="{{ value }}"
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+>
+    {{ label }}
+</a>
