@@ -1,0 +1,238 @@
+{#
+    Generic Bootstrap Dropdown component.
+
+    Parameters:
+    - id: Required unique dropdown ID.
+    - label: Dropdown toggle or primary action label.
+    - href: Optional URL. When provided, the toggle or primary action is rendered as a link.
+    - variant: Bootstrap button variant.
+    - size: Optional button size.
+    - disabled: Disables the dropdown controls.
+    - split: Enables a separate primary action and dropdown toggle.
+    - toggle_label: Accessible label for the split dropdown toggle.
+    - direction: Dropdown direction: down, up, start or end.
+    - alignment: Dropdown menu alignment: start or end.
+    - auto_close: Auto close behavior: true, false, inside or outside.
+    - reference: Positioning reference: toggle or parent.
+    - menu_tag: Dropdown menu container: ul or div.
+    - classes: Additional wrapper CSS classes.
+    - menu_classes: Additional dropdown menu CSS classes.
+
+    Blocks:
+    - toggle: Dropdown trigger. Defaults to Button/Link/Split Button.
+    Custom implementations should preserve the generated toggle ID
+    and Bootstrap dropdown attributes.
+    - menu: Dropdown menu content.
+
+    Standard dropdown:
+
+    {% embed 'partials/components/dropdown/dropdown.html.twig' with {
+        id: 'actions-dropdown',
+        label: 'Actions'
+    } only %}
+        {% block menu %}
+            <li>
+                <a class="dropdown-item" href="#">
+                    Action
+                </a>
+            </li>
+        {% endblock %}
+    {% endembed %}
+
+    Split dropdown:
+
+    {% embed 'partials/components/dropdown/dropdown.html.twig' with {
+        id: 'products-dropdown',
+        label: 'Products',
+        href: '/products',
+        split: true,
+        toggle_label: 'Open Products submenu'
+    } only %}
+        {% block menu %}
+            <li>
+                <a class="dropdown-item" href="/products/category-1">
+                    Category 1
+                </a>
+            </li>
+        {% endblock %}
+    {% endembed %}
+
+    Custom menu structure:
+
+    {% embed 'partials/components/dropdown/dropdown.html.twig' with {
+        id: 'mega-dropdown',
+        label: 'Products',
+        menu_tag: 'div',
+        menu_classes: 'mega-menu'
+    } only %}
+        {% block menu %}
+            <div class="container">
+                ...
+            </div>
+        {% endblock %}
+    {% endembed %}
+#}
+
+{% set dropdown_id = id ?? null %}
+{% set dropdown_label = label ?? null %}
+{% set dropdown_href = href ?? null %}
+{% set dropdown_variant = variant ?? 'secondary' %}
+{% set dropdown_size = size ?? null %}
+{% set dropdown_disabled = disabled ?? false %}
+{% set dropdown_split = split ?? false %}
+{% set dropdown_toggle_label = toggle_label ?? ('THEME_BASALT.DROPDOWN.TOGGLE'|t) %}
+{% set dropdown_direction = direction ?? 'down' %}
+{% set dropdown_alignment = alignment ?? 'start' %}
+{% set dropdown_auto_close = auto_close ?? true %}
+{% set dropdown_reference = reference ?? (dropdown_split ? 'parent' : 'toggle') %}
+{% set dropdown_menu_tag = menu_tag ?? 'ul' %}
+{% set classes = classes ?? '' %}
+{% set menu_classes = menu_classes ?? '' %}
+
+{% if dropdown_direction not in ['down', 'up', 'start', 'end'] %}
+    {% set dropdown_direction = 'down' %}
+{% endif %}
+
+{% if dropdown_alignment not in ['start', 'end'] %}
+    {% set dropdown_alignment = 'start' %}
+{% endif %}
+
+{% if dropdown_auto_close is not same as(false)
+    and dropdown_auto_close is not same as('inside')
+    and dropdown_auto_close is not same as('outside')
+%}
+    {% set dropdown_auto_close = true %}
+{% endif %}
+
+{% if dropdown_reference not in ['toggle', 'parent'] %}
+    {% set dropdown_reference = dropdown_split ? 'parent' : 'toggle' %}
+{% endif %}
+
+{% if dropdown_menu_tag not in ['ul', 'div'] %}
+    {% set dropdown_menu_tag = 'ul' %}
+{% endif %}
+
+{% set direction_class = {
+    down: 'dropdown',
+    up: 'dropup',
+    start: 'dropstart',
+    end: 'dropend'
+}[dropdown_direction] %}
+
+{% if dropdown_split %}
+    {% set wrapper_classes = [
+        'btn-group',
+        dropdown_direction != 'down' ? direction_class : '',
+        classes
+    ]|filter(v => v)|join(' ') %}
+{% else %}
+    {% set wrapper_classes = [
+        direction_class,
+        classes
+    ]|filter(v => v)|join(' ') %}
+{% endif %}
+
+{% set dropdown_menu_classes = [
+    'dropdown-menu',
+    dropdown_alignment == 'end' ? 'dropdown-menu-end' : '',
+    menu_classes
+]|filter(v => v)|join(' ') %}
+
+{% set auto_close_value = dropdown_auto_close is same as(false)
+    ? 'false'
+    : (
+        dropdown_auto_close is same as('inside')
+        ? 'inside'
+        : (
+            dropdown_auto_close is same as('outside')
+            ? 'outside'
+            : 'true'
+        )
+    )
+%}
+
+{% if dropdown_id and dropdown_label %}
+    {% set toggle_attributes = {
+        id: dropdown_id ~ '-toggle',
+        'data-bs-toggle': 'dropdown',
+        'data-bs-auto-close': auto_close_value,
+        'data-bs-reference': dropdown_reference,
+        'aria-expanded': 'false'
+    } %}
+
+    <div class="{{ wrapper_classes|e('html_attr') }}">
+
+        {% block toggle %}
+            {% if dropdown_split %}
+
+                {% set split_toggle_attributes = toggle_attributes|merge({
+                    'aria-label': dropdown_toggle_label
+                }) %}
+
+                {% if dropdown_direction == 'start' %}
+                    {% include 'partials/elements/button.html.twig' with {
+                        label: '',
+                        variant: dropdown_variant,
+                        size: dropdown_size,
+                        disabled: dropdown_disabled,
+                        classes: 'dropdown-toggle dropdown-toggle-split',
+                        attributes: split_toggle_attributes
+                    } only %}
+
+                    {% include 'partials/elements/button.html.twig' with {
+                        label: dropdown_label,
+                        href: dropdown_href,
+                        variant: dropdown_variant,
+                        size: dropdown_size,
+                        disabled: dropdown_disabled
+                    } only %}
+                {% else %}
+                    {% include 'partials/elements/button.html.twig' with {
+                        label: dropdown_label,
+                        href: dropdown_href,
+                        variant: dropdown_variant,
+                        size: dropdown_size,
+                        disabled: dropdown_disabled
+                    } only %}
+
+                    {% include 'partials/elements/button.html.twig' with {
+                        label: '',
+                        variant: dropdown_variant,
+                        size: dropdown_size,
+                        disabled: dropdown_disabled,
+                        classes: 'dropdown-toggle dropdown-toggle-split',
+                        attributes: split_toggle_attributes
+                    } only %}
+                {% endif %}
+
+            {% else %}
+
+                {% set single_toggle_attributes = toggle_attributes %}
+
+                {% if dropdown_href %}
+                    {% set single_toggle_attributes = single_toggle_attributes|merge({
+                        role: 'button'
+                    }) %}
+                {% endif %}
+
+                {% include 'partials/elements/button.html.twig' with {
+                    label: dropdown_label,
+                    href: dropdown_href,
+                    variant: dropdown_variant,
+                    size: dropdown_size,
+                    disabled: dropdown_disabled,
+                    classes: 'dropdown-toggle',
+                    attributes: single_toggle_attributes
+                } only %}
+
+            {% endif %}
+        {% endblock %}
+
+        <{{ dropdown_menu_tag }}
+            class="{{ dropdown_menu_classes|e('html_attr') }}"
+            aria-labelledby="{{ (dropdown_id ~ '-toggle')|e('html_attr') }}"
+        >
+            {% block menu %}{% endblock %}
+        </{{ dropdown_menu_tag }}>
+    </div>
+{% endif %}

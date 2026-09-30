@@ -7,6 +7,8 @@ en:
       LOADING: Loading
       PAGINATION: Pagination
       PRIMARY_NAVIGATION: Primary navigation
+    DROPDOWN:
+      TOGGLE: Toggle dropdown
     COLLECTION:
       EMPTY: No items found.
       READ_MORE: Read more
@@ -32,6 +34,8 @@ pl:
       LOADING: Ładowanie
       PAGINATION: Paginacja
       PRIMARY_NAVIGATION: Nawigacja główna
+    DROPDOWN:
+      TOGGLE: Rozwiń menu
     COLLECTION:
       EMPTY: Brak elementów do wyświetlenia.
       READ_MORE: Czytaj więcej
