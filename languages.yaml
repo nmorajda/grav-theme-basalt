@@ -9,6 +9,7 @@ en:
       PRIMARY_NAVIGATION: Primary navigation
     DROPDOWN:
       TOGGLE: Toggle dropdown
+      TOGGLE_SUBMENU: "Toggle %s submenu"
     COLLECTION:
       EMPTY: No items found.
       READ_MORE: Read more
@@ -36,6 +37,7 @@ pl:
       PRIMARY_NAVIGATION: Nawigacja główna
     DROPDOWN:
       TOGGLE: Rozwiń menu
+      TOGGLE_SUBMENU: "Rozwiń podmenu %s"
     COLLECTION:
       EMPTY: Brak elementów do wyświetlenia.
       READ_MORE: Czytaj więcej

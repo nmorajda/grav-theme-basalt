@@ -1,3 +1,13 @@
 .navigation-icon {
     margin-inline-end: 0.375rem;
 }
+
+.navigation-dropdown-split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > .dropdown-menu {
+        flex-basis: 100%;
+    }
+}

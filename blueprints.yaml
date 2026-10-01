@@ -38,17 +38,6 @@ form:
           title: General
 
           fields:
-            dropdown.enabled:
-              type: toggle
-              label: Enable dropdown navigation
-              highlight: 1
-              default: 1
-              options:
-                1: PLUGIN_ADMIN.ENABLED
-                0: PLUGIN_ADMIN.DISABLED
-              validate:
-                type: bool
-
             icons.enabled:
               type: toggle
               label: Enable Bootstrap Icons
@@ -97,6 +86,33 @@ form:
                   validate:
                     type: string
 
+            navbar_dropdown:
+              type: section
+              title: Dropdown navigation
+              underline: true
+
+              fields:
+                dropdown.enabled:
+                  type: toggle
+                  label: Enable dropdown navigation
+                  highlight: 1
+                  default: 1
+                  options:
+                    1: PLUGIN_ADMIN.ENABLED
+                    0: PLUGIN_ADMIN.DISABLED
+                  validate:
+                    type: bool
+
+                navbar.dropdown.trigger:
+                  type: select
+                  label: Default dropdown trigger
+                  help: Select how parent navigation items with children open their submenu.
+                  default: standard
+                  options:
+                    standard: Standard
+                    split: Split
+                  validate:
+                    type: string
             navbar_integrations:
               type: section
               title: Integrations

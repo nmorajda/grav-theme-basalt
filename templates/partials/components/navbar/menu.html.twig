@@ -8,12 +8,14 @@
 {% import 'macros/navigation.html.twig' as navigation %}
 
 {% set dropdown_enabled = config.theme.dropdown.enabled ?? true %}
+{% set dropdown_trigger = config.theme.navbar.dropdown.trigger ?? 'standard' %}
 {% set icons_enabled = config.theme.icons.enabled ?? true %}
 
 <ul class="navbar-nav me-auto">
     {{ navigation.render(
         pages.children.visible,
         dropdown_enabled,
+        dropdown_trigger,
         icons_enabled
     ) }}
 </ul>
