@@ -5,8 +5,9 @@
 
     Responsibilities:
     - render standard navigation links,
-    - render dropdown navigation for pages with visible children,
+    - render dropdown navigation for pages with visible children or configured mega menus,
     - support standard and split dropdown triggers,
+    - support custom mega menu templates,
     - preserve active and current page states,
     - optionally render navigation icons.
 
@@ -20,8 +21,13 @@
     navigation:
       dropdown:
         trigger: standard|split
+        layout: mega
+        template: template-name
 
     The per-page trigger overrides the global Navbar dropdown trigger.
+
+    When layout is set to mega, the selected template is loaded from:
+    partials/components/navbar/mega/
 
     Macros:
     - icon(name, icons_enabled)
@@ -37,10 +43,13 @@
     {% endif %}
 {% endmacro %}
 
-{% macro render(items, dropdown_enabled, dropdown_trigger, icons_enabled) %}
+{% macro render(items, dropdown_enabled, dropdown_trigger, icons_enabled, pages) %}
     {% for item in items %}
         {% set children = item.children.visible %}
+        {% set dropdown_layout = item.header.navigation.dropdown.layout ?? 'default' %}
+        {% set is_mega = dropdown_enabled and dropdown_layout == 'mega' %}
         {% set has_children = dropdown_enabled and children.count > 0 %}
+        {% set has_dropdown = is_mega or has_children %}
         {% set active = item.active or item.activeChild %}
 
         {% set item_trigger =
@@ -53,10 +62,15 @@
             {% set item_trigger = 'standard' %}
         {% endif %}
 
-        {% if has_children %}
+        {% set mega_template =
+            item.header.navigation.dropdown.template
+            ?? 'default'
+        %}
+
+        {% if has_dropdown %}
             {% set dropdown_id = 'navigation-dropdown-' ~ item.slug %}
 
-            <li class="nav-item dropdown{{ item_trigger == 'split' ? ' navigation-dropdown-split' : '' }}">
+            <li class="nav-item dropdown{{ item_trigger == 'split' ? ' navigation-dropdown-split' : '' }}{{ is_mega ? ' navigation-dropdown-mega' : '' }}">
                 {% if item_trigger == 'split' %}
                     <a
                         class="nav-link{{ active ? ' active' : '' }}"
@@ -91,30 +105,37 @@
                     </button>
                 {% endif %}
 
-                <ul
-                    class="dropdown-menu"
-                    aria-labelledby="{{ dropdown_id|e('html_attr') }}"
-                >
-                    {% for child in children %}
-                        {% set child_active = child.active or child.activeChild %}
+                {% if is_mega %}
+                    {% include [
+                        'partials/components/navbar/mega/' ~ mega_template ~ '.html.twig',
+                        'partials/components/navbar/mega/default.html.twig'
+                    ] %}
+                {% else %}
+                    <ul
+                        class="dropdown-menu"
+                        aria-labelledby="{{ dropdown_id|e('html_attr') }}"
+                    >
+                        {% for child in children %}
+                            {% set child_active = child.active or child.activeChild %}
 
-                        <li>
-                            <a
-                                class="dropdown-item{{ child_active ? ' active' : '' }}"
-                                href="{{ child.url|e('html_attr') }}"
-                                {% if child.active %}
-                                    aria-current="page"
-                                {% endif %}
-                            >
-                                {{ _self.icon(
-                                    child.header.icon,
-                                    icons_enabled
-                                ) }}
-                                <span>{{ child.menu|e }}</span>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                            <li>
+                                <a
+                                    class="dropdown-item{{ child_active ? ' active' : '' }}"
+                                    href="{{ child.url|e('html_attr') }}"
+                                    {% if child.active %}
+                                        aria-current="page"
+                                    {% endif %}
+                                >
+                                    {{ _self.icon(
+                                        child.header.icon,
+                                        icons_enabled
+                                    ) }}
+                                    <span>{{ child.menu|e }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </li>
         {% else %}
             <li class="nav-item">

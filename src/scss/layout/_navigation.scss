@@ -2,6 +2,11 @@
     margin-inline-end: 0.375rem;
 }
 
+.navbar > .container {
+    position: relative;
+}
+
+// Keep split navigation link and its dropdown toggle on the same row.
 .navigation-dropdown-split {
     display: flex;
     flex-wrap: wrap;
@@ -9,5 +14,47 @@
 
     > .dropdown-menu {
         flex-basis: 100%;
+    }
+}
+
+// Position mega menus relative to the navbar container.
+.navigation-dropdown-mega {
+    position: static;
+
+    > .dropdown-menu {
+        inset-inline: 0;
+        width: auto;
+        box-shadow: var(--bs-box-shadow-sm);
+    }
+}
+
+// Align dropdown toggles to the right edge in collapsed navbar mode,
+// regardless of standard/split trigger or regular/mega dropdown layout.
+@each $breakpoint in (sm, md, lg, xl, xxl) {
+    @include media-breakpoint-down($breakpoint) {
+        .navbar-expand-#{$breakpoint} {
+            .navbar-nav > .dropdown:not(.navigation-dropdown-split) {
+                > .dropdown-toggle {
+                    display: flex;
+                    width: 100%;
+                    align-items: center;
+                    text-align: start;
+
+                    &::after {
+                        margin-inline-start: auto;
+                    }
+                }
+            }
+
+            .navigation-dropdown-split {
+                > .nav-link:not(.dropdown-toggle) {
+                    flex: 1 1 auto;
+                }
+
+                > .dropdown-toggle {
+                    margin-inline-start: auto;
+                }
+            }
+        }
     }
 }

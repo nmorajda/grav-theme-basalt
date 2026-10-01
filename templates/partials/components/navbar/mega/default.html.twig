@@ -1,0 +1,21 @@
+{#
+    Default mega menu template.
+
+    Renders content from the configured Grav page or module.
+#}
+
+{% set source =
+    item.header.navigation.dropdown.source
+    ?? '/_widgets/_navbar/_mega/_default'
+%}
+
+{% set mega = pages.find(source) %}
+
+<div
+    class="dropdown-menu p-4"
+    aria-labelledby="{{ dropdown_id|e('html_attr') }}"
+>
+    {% if mega %}
+        {{ mega.content|raw }}
+    {% endif %}
+</div>
