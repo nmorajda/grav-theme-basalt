@@ -23,6 +23,7 @@
         trigger: standard|split
         layout: mega
         template: template-name
+        source: /path/to/page-or-module
 
     The per-page trigger overrides the global Navbar dropdown trigger.
 
@@ -31,7 +32,7 @@
 
     Macros:
     - icon(name, icons_enabled)
-    - render(items, dropdown_enabled, dropdown_trigger, icons_enabled)
+    - render(items, dropdown_enabled, dropdown_trigger, icons_enabled, pages)
 #}
 
 {% macro icon(name, icons_enabled) %}

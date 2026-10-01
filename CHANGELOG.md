@@ -7,6 +7,26 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-01
+
+### Added
+
+- Public Bootstrap Dropdown and Offcanvas Twig components with configurable behavior and extension blocks.
+- Standard and split navbar dropdown triggers, with a global default and per-page overrides.
+- Content-driven mega menus with configurable templates and Grav page or module sources.
+- Public default mega-menu partial and a modular `mega-menu.md` template for reusable navigation content.
+- English and Polish accessible labels for dropdown toggles.
+
+### Changed
+
+- Expanded the public navigation macro to receive the dropdown trigger and page collection required by mega menus.
+- Added responsive styles for standard, split and mega dropdown layouts.
+- Grouped dropdown navigation controls with the Navbar settings in Grav Admin.
+
+### Fixed
+
+- Close open navbar dropdowns when crossing the configured expansion breakpoint.
+
 ## [0.8.3] - 2026-09-30
 
 ### Added
@@ -155,7 +175,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.3...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.0...v0.8.1

@@ -12,9 +12,13 @@ in a child theme or site configuration.
 - `templates/collection.html.twig` is the generic collection page template.
 - `templates/partials/collection/` contains collection item variants and cover
   handling.
-- `templates/partials/elements/` contains generic image renderers.
+- `templates/partials/elements/` contains generic UI and media renderers.
 - `templates/partials/components/` contains public Bootstrap component and
   navbar partials.
+- `templates/partials/components/navbar/mega/` contains public mega-menu
+  layouts that child themes can override or extend.
+- `templates/modular/` contains reusable content-source templates for widgets
+  and mega menus.
 - `templates/shortcodes/` contains shortcode presentation templates.
 - `shortcodes/` contains the matching Shortcode Core PHP handlers.
 - `src/scss/` and `src/js/` are the editable asset sources.

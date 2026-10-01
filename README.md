@@ -15,13 +15,13 @@ complete Bootstrap CSS and JavaScript bundles.
 - Bootstrap 5.3.8 with selected SCSS and JavaScript modules
 - reusable parent-theme API under the stable `@basalt` Twig namespace
 - accessible document shell, skip links, breadcrumbs and pagination
-- responsive navbar composed from overridable partials
+- responsive navbar with standard, split and content-driven mega dropdowns
 - optional SimpleSearch, LangSwitcher and navbar CTA integrations
 - generic collection template with item and card variants
 - responsive collection grids with one to four columns
 - reusable image and responsive-image renderers using Grav Media
 - reusable Button, Icon, Badge, Close Button, Link and Spinner elements
-- reusable Card, Accordion, Alert, Modal, Carousel and Tabs components
+- reusable Card, Accordion, Alert, Dropdown, Modal, Offcanvas, Carousel and Tabs components
 - Shortcode Core handlers for Accordion, Alert, Badge, Button, Carousel, Icon, Modal and Tabs
 - local Bootstrap Icons and font extension points
 - Gulp, Sass and esbuild development and production tasks
@@ -435,6 +435,8 @@ icons:
 navbar:
   enabled: true
   expand: lg
+  dropdown:
+    trigger: standard
   language_switcher:
     enabled: true
   search:
@@ -444,8 +446,8 @@ navbar:
 ```
 
 All settings shown above are available in the Admin blueprint and can also be
-configured directly in the theme YAML. The General tab contains dropdown and
-icon settings. The Navbar tab groups the main navbar options, plugin
+configured directly in the theme YAML. The General tab contains icon settings.
+The Navbar tab groups the main navbar options, dropdown behavior, plugin
 integrations and call-to-action control. `navbar.expand` maps to one of the
 supported Bootstrap `navbar-expand-*` breakpoints: `sm`, `md`, `lg`, `xl` or
 `xxl`.
@@ -453,13 +455,88 @@ supported Bootstrap `navbar-expand-*` breakpoints: `sm`, `md`, `lg`, `xl` or
 The navigation contract is:
 
 - a regular item is a link;
-- with `dropdown.enabled: true`, a visible parent with visible children is only
-  a dropdown button and has no `href`;
+- with `dropdown.enabled: true`, a visible parent with visible children uses
+  the configured dropdown trigger;
+- the `standard` trigger is a dropdown button without an `href`;
+- the `split` trigger keeps the parent as a link and adds a separate accessible
+  dropdown button;
 - the submenu contains only children and does not add an Overview item;
 - the default macro supports one submenu level;
+- a page can render a mega menu instead of its child-page submenu;
 - with dropdowns disabled, the parent is a normal link and children are hidden;
 - `icons.enabled` controls page icons configured through frontmatter;
 - `navbar.enabled` disables the complete primary navbar.
+
+The global `navbar.dropdown.trigger` setting accepts `standard` or `split`.
+Individual pages can override it through frontmatter:
+
+```yaml
+---
+title: Products
+navigation:
+  dropdown:
+    trigger: split
+---
+```
+
+Invalid trigger values fall back to `standard`. When the navbar crosses its
+configured expansion breakpoint, Basalt closes open dropdowns through the
+Bootstrap Dropdown API so that stale open state is not carried between the
+collapsed and expanded layouts.
+
+### Mega menus
+
+Set `navigation.dropdown.layout` to `mega` on a navigation page to replace its
+regular child-page submenu with content from another Grav page or module. A
+mega menu remains available even when the navigation page has no visible
+children.
+
+```yaml
+---
+title: Products
+navigation:
+  dropdown:
+    trigger: split
+    layout: mega
+    template: default
+    source: /_widgets/_navbar/_mega/_products
+---
+```
+
+The `template` value resolves to
+`templates/partials/components/navbar/mega/<template>.html.twig`. If the
+selected template does not exist, Basalt falls back to the public `default`
+template. A child theme can override `default.html.twig` or add a matching
+custom template such as `products.html.twig` without copying the navigation
+macro. A custom template receives the current navigation `item` and the Grav
+`pages` collection, and is responsible for its own source-resolution logic.
+
+The built-in `default.html.twig` reads `navigation.dropdown.source`, passes it
+to Grav's `pages.find()` and renders the matched page's processed content. The
+source can identify any page or module available in the page tree. When
+`source` is omitted, the default template uses
+`/_widgets/_navbar/_mega/_default`. For example, the explicit source above can
+use:
+
+```text
+user/pages/_widgets/_navbar/_mega/_products/mega-menu.md
+```
+
+```yaml
+---
+title: Products mega menu
+visible: false
+---
+
+<div class="row g-4">
+    <div class="col-md-6">Product group one</div>
+    <div class="col-md-6">Product group two</div>
+</div>
+```
+
+`templates/modular/mega-menu.html.twig` renders the processed module content.
+Mega-menu content is trusted site-authored output; escape untrusted values in
+custom templates before rendering them.
 
 A page icon uses the Bootstrap Icon name without the `bi-` prefix:
 
@@ -728,6 +805,38 @@ Check this message before continuing.
 [/alert]
 ```
 
+### Dropdown
+
+The public `templates/partials/components/dropdown/dropdown.html.twig`
+component accepts `id`, `label`, `href`, `variant`, `size`, `disabled`,
+`split`, `toggle_label`, `direction`, `alignment`, `auto_close`, `reference`,
+`menu_tag`, `classes` and `menu_classes`. Its public blocks are `toggle` and
+`menu`. The default toggle composes the Button element.
+
+```twig
+{% embed 'partials/components/dropdown/dropdown.html.twig' with {
+    id: 'actions-dropdown',
+    label: 'Actions'
+} only %}
+    {% block menu %}
+        <li><a class="dropdown-item" href="/edit">Edit</a></li>
+        <li><a class="dropdown-item" href="/archive">Archive</a></li>
+    {% endblock %}
+{% endembed %}
+
+{% embed 'partials/components/dropdown/dropdown.html.twig' with {
+    id: 'products-dropdown',
+    label: 'Products',
+    href: '/products',
+    split: true,
+    toggle_label: 'Open Products submenu'
+} only %}
+    {% block menu %}
+        <li><a class="dropdown-item" href="/products/category">Category</a></li>
+    {% endblock %}
+{% endembed %}
+```
+
 ### Button
 
 The public `templates/partials/elements/button.html.twig` element accepts
@@ -886,6 +995,27 @@ The public `templates/partials/elements/spinner.html.twig` element accepts
 } only %}
 ```
 
+### Offcanvas
+
+The public `templates/partials/components/offcanvas/offcanvas.html.twig`
+component accepts `id`, `title`, `label`, `placement`, `scroll`, `backdrop`,
+`keyboard`, `responsive`, `classes` and `attributes`. Provide a visible
+`title` or an accessible `label`. The `body` block contains its main content.
+
+```twig
+{% embed 'partials/components/offcanvas/offcanvas.html.twig' with {
+    id: 'site-menu',
+    title: 'Menu',
+    placement: 'start'
+} only %}
+    {% block body %}
+        <nav aria-label="Secondary navigation">
+            {# Navigation content. #}
+        </nav>
+    {% endblock %}
+{% endembed %}
+```
+
 ### Modal
 
 Parameters: `id`, `title`, `label`, `size` (`sm`, `lg` or `xl`),
@@ -987,7 +1117,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.8.3'
+    version: '>=0.9.0'
 ```
 
 ### Extending parent templates
@@ -1002,7 +1132,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.8.3:
+0.9.0:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -1035,7 +1165,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.8.3.
+are not part of the stable public Twig API for Basalt 0.9.0.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -1054,6 +1184,7 @@ The following templates and partials are public override points for child themes
 | Template or partial | Responsibility |
 | --- | --- |
 | `templates/collection.html.twig` | Renders configurable collection grids, variants, empty state and pagination. |
+| `templates/modular/mega-menu.html.twig` | Renders trusted content for a modular mega-menu source. |
 | `templates/modular/widget.html.twig` | Renders trusted reusable widget page content. |
 | `templates/partials/header.html.twig` | Renders the site header and includes the navigation entry point. |
 | `templates/partials/navigation.html.twig` | Enables or disables the complete navbar component. |
@@ -1062,6 +1193,9 @@ The following templates and partials are public override points for child themes
 | `templates/partials/components/navbar/toggler.html.twig` | Renders the accessible Collapse trigger. |
 | `templates/partials/components/navbar/menu.html.twig` | Calls the public navigation macro for visible pages. |
 | `templates/partials/components/navbar/cta.html.twig` | Renders the `/_widgets/_navbar/_cta` page. |
+| `templates/partials/components/navbar/mega/default.html.twig` | Resolves and renders the configured mega-menu content source. |
+| `templates/partials/components/dropdown/dropdown.html.twig` | Renders standard and split Bootstrap Dropdowns with overridable toggle and menu blocks. |
+| `templates/partials/components/offcanvas/offcanvas.html.twig` | Renders an accessible Bootstrap Offcanvas with an overridable body block. |
 | `templates/partials/components/search/simplesearch.html.twig` | Renders the optional SimpleSearch form. |
 | `templates/partials/components/langswitcher/langswitcher.html.twig` | Extends the optional LangSwitcher logic partial. |
 | `templates/partials/breadcrumbs.html.twig` | Keeps the plugin-compatible Breadcrumbs override path and delegates rendering to the component. |
@@ -1097,12 +1231,13 @@ The public navigation macro is defined in
 `templates/macros/navigation.html.twig` with this signature:
 
 ```twig
-navigation.render(items, dropdown_enabled, icons_enabled)
+navigation.render(items, dropdown_enabled, dropdown_trigger, icons_enabled, pages)
 ```
 
 It renders the supplied items according to the documented navigation contract
-and the dropdown and icon switches. The internal `navigation.icon()` helper is
-not part of the public API.
+and the dropdown and icon switches. `dropdown_trigger` selects the global
+`standard` or `split` behavior, while `pages` resolves configured mega-menu
+sources. The internal `navigation.icon()` helper is not part of the public API.
 
 Use `parent()` when extending asset blocks:
 
@@ -1213,7 +1348,7 @@ basalt/
 │   └── TabShortcode.php
 ├── src/
 │   ├── fonts/
-│   ├── js/{modules/bootstrap.js,script.js}
+│   ├── js/{modules/{bootstrap.js,navbar.js},script.js}
 │   ├── scss/
 │   │   ├── base/
 │   │   ├── layout/
@@ -1231,7 +1366,7 @@ basalt/
 │   ├── default.html.twig
 │   ├── error.html.twig
 │   ├── macros/navigation.html.twig
-│   ├── modular/widget.html.twig
+│   ├── modular/{mega-menu.html.twig,widget.html.twig}
 │   ├── partials/
 │   │   ├── collection/
 │   │   ├── components/
@@ -1241,9 +1376,11 @@ basalt/
 │   │   │   ├── card/
 │   │   │   ├── card.html.twig
 │   │   │   ├── carousel/
+│   │   │   ├── dropdown/
 │   │   │   ├── langswitcher/
 │   │   │   ├── modal/
-│   │   │   ├── navbar/
+│   │   │   ├── navbar/{mega/,*.html.twig}
+│   │   │   ├── offcanvas/
 │   │   │   ├── pagination/
 │   │   │   ├── search/
 │   │   │   └── tabs/
