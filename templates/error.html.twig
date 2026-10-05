@@ -1,11 +1,16 @@
 {% extends 'partials/base.html.twig' %}
 
 {% block content %}
-    <div class="error-page">
-        <h1>{{ page.title|e }}</h1>
+    <div class="container">
+        <div class="error-page">
+            {% include 'partials/elements/heading.html.twig' with {
+                text: page.title,
+                level: 1
+            } only %}
 
-        <div class="error-page__content">
-            {{ page.content|raw }}
+            <div class="error-page__content">
+                {{ page.content|raw }}
+            </div>
         </div>
     </div>
 {% endblock %}
