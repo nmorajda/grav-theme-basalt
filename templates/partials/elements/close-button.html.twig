@@ -27,6 +27,8 @@
     } %}
 #}
 
+{% import 'macros/attributes.html.twig' as html_attributes %}
+
 {% set label = label|default('THEME_BASALT.ARIA.CLOSE'|t) %}
 {% set disabled = disabled|default(false) %}
 {% set classes = classes|default('') %}
@@ -42,17 +44,8 @@
     class="{{ close_button_classes }}"
     aria-label="{{ label }}"
     {% if disabled %}disabled{% endif %}
-    {% for attribute, value in attributes %}
-        {% if attribute not in ['class', 'type', 'disabled', 'aria-label'] %}
-            {% if attribute starts with 'aria-' or attribute starts with 'data-' %}
-                {% if value is not null %}
-                    {{ attribute }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
-                {% endif %}
-            {% elseif value is same as(true) %}
-                {{ attribute }}
-            {% elseif value is not same as(false) and value is not null %}
-                {{ attribute }}="{{ value }}"
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {{ html_attributes.render(
+        attributes,
+        ['class', 'type', 'disabled', 'aria-label']
+    ) }}
 ></button>

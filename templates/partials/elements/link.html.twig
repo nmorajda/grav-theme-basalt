@@ -36,6 +36,8 @@
     } %}
 #}
 
+{% import 'macros/attributes.html.twig' as html_attributes %}
+
 {% set target = target|default(null) %}
 {% set rel = rel|default(null) %}
 {% set classes = classes|default('') %}
@@ -50,19 +52,10 @@
     {% if target %}target="{{ target }}"{% endif %}
     {% if rel %}rel="{{ rel }}"{% endif %}
     {% if classes %}class="{{ classes }}"{% endif %}
-    {% for attribute, value in attributes %}
-        {% if attribute not in ['href', 'target', 'rel', 'class'] %}
-            {% if attribute starts with 'aria-' or attribute starts with 'data-' %}
-                {% if value is not null %}
-                    {{ attribute }}="{{ value is same as(true) ? 'true' : (value is same as(false) ? 'false' : value) }}"
-                {% endif %}
-            {% elseif value is same as(true) %}
-                {{ attribute }}
-            {% elseif value is not same as(false) and value is not null %}
-                {{ attribute }}="{{ value }}"
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {{ html_attributes.render(
+        attributes,
+        ['href', 'target', 'rel', 'class']
+    ) }}
 >
     {{ label }}
 </a>
