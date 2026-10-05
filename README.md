@@ -20,8 +20,8 @@ complete Bootstrap CSS and JavaScript bundles.
 - generic collection template with item and card variants
 - responsive collection grids with one to four columns
 - reusable image and responsive-image renderers using Grav Media
-- reusable Button, Icon, Badge, Close Button, Link and Spinner elements
-- reusable Card, Accordion, Alert, Dropdown, Modal, Offcanvas, Carousel and Tabs components
+- reusable Button, Heading, Icon, Badge, Close Button, Link and Spinner elements
+- reusable Card, Section, Accordion, Alert, Dropdown, Modal, Offcanvas, Carousel and Tabs components
 - Shortcode Core handlers for Accordion, Alert, Badge, Button, Carousel, Icon, Modal and Tabs
 - local Bootstrap Icons and font extension points
 - Gulp, Sass and esbuild development and production tasks
@@ -776,6 +776,82 @@ bin/gpm install shortcode-core
 
 Shortcodes do not require Twig in Content.
 
+### Shared HTML attributes
+
+Public elements and components that accept an `attributes` map use the shared
+`templates/macros/attributes.html.twig` macro. Child themes and custom
+components can import the same renderer:
+
+```twig
+{% import 'macros/attributes.html.twig' as html_attributes %}
+
+<div
+    {{ html_attributes.render(attributes, ['id', 'class']) }}
+></div>
+```
+
+Its public signature is `render(attributes, excluded = [])`. Names in
+`excluded` remain owned by the calling component. A regular `true` value emits
+a boolean attribute, while regular `false` and `null` values are omitted.
+Boolean `aria-*` and `data-*` values are emitted as the strings `"true"` and
+`"false"`; all rendered values are escaped for an HTML attribute context.
+
+Button, Link, Close Button, Heading, Section and Offcanvas use this renderer.
+Their documented parameters and component-owned attribute exclusions remain
+unchanged.
+
+### Section
+
+The public `templates/partials/components/section/section.html.twig` component
+provides an optional full-row header followed by primary and secondary
+columns. It accepts `id`, `classes`, `attributes`, `container_classes`,
+`row_classes`, `header_classes`, `primary_classes` and `secondary_classes`.
+The defaults are `container`, `row`, `col-12`, `col-12 col-lg-6` and
+`col-12 col-lg-6` for the respective layout wrappers.
+
+The independent `section_header`, `section_primary` and `section_secondary`
+blocks are rendered only when they contain content:
+
+```twig
+{% embed 'partials/components/section/section.html.twig' with {
+    id: 'services',
+    classes: 'py-5',
+    container_classes: 'container-xl',
+    row_classes: 'row g-4 align-items-center',
+    header_classes: 'col-12',
+    primary_classes: 'col-12 col-lg-7',
+    secondary_classes: 'col-12 col-lg-5'
+} only %}
+    {% block section_header %}
+        {% include 'partials/elements/heading.html.twig' with {
+            text: 'Services',
+            level: 2
+        } only %}
+    {% endblock %}
+
+    {% block section_primary %}
+        Primary content.
+    {% endblock %}
+
+    {% block section_secondary %}
+        Secondary content.
+    {% endblock %}
+{% endembed %}
+```
+
+Keep primary content first in the document for the mobile reading order. Use
+Bootstrap responsive order utilities to reverse only the desktop layout:
+
+```twig
+{% embed 'partials/components/section/section.html.twig' with {
+    primary_classes: 'col-12 col-lg-7 order-lg-2',
+    secondary_classes: 'col-12 col-lg-5 order-lg-1'
+} only %}
+    {% block section_primary %}Primary content.{% endblock %}
+    {% block section_secondary %}Secondary content.{% endblock %}
+{% endembed %}
+```
+
 ### Accordion
 
 Parameters:
@@ -874,6 +950,25 @@ the button label.
 ```text
 [button href="/about"]Learn more[/button]
 [button href="/contact" variant="outline-primary" size="lg"]Contact us[/button]
+```
+
+### Heading
+
+The public `templates/partials/elements/heading.html.twig` element accepts
+`text`, `level`, `id`, `classes` and `attributes`. `level` accepts integers
+from `1` to `6` and defaults to `2`; invalid values also fall back to `2`.
+The element renders only when `text` is non-empty and escapes its text content.
+
+```twig
+{% include 'partials/elements/heading.html.twig' with {
+    text: 'Page title',
+    level: 1,
+    id: 'page-title',
+    classes: 'display-4',
+    attributes: {
+        'data-section-heading': true
+    }
+} only %}
 ```
 
 ### Icon
@@ -1117,7 +1212,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.9.0'
+    version: '>=0.10.0'
 ```
 
 ### Extending parent templates
@@ -1132,7 +1227,7 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.9.0:
+0.10.0:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
@@ -1145,7 +1240,7 @@ The following blocks are the stable public Twig API for child themes in Basalt
 | `javascripts` | `templates/partials/base.html.twig` | Registers the parent JavaScript bundle in the `bottom` group. | Yes, when preserving parent scripts. | Add script registrations around the parent output. |
 | `skip_links` | `templates/partials/base.html.twig` | Renders the required main-content skip link and provides an extension point for additional skip links. | Yes, when adding links; not when providing an equivalent complete collection. | Extend the parent output or replace the collection while preserving a link to `#main-content`. |
 | `header` | `templates/partials/base.html.twig` | Renders the document header through the public header partial. | Only when retaining the parent header. | Full replacement of the header region. |
-| `main` | `templates/partials/base.html.twig` | Renders the main element, container and page content block. | Only when retaining the parent main region. | Full replacement of the main region. |
+| `main` | `templates/partials/base.html.twig` | Renders the main element, breadcrumbs region and page content block without imposing a global content container. | Only when retaining the parent main region. | Full replacement of the main region. |
 | `breadcrumbs` | `templates/partials/base.html.twig` | Conditionally renders the optional Breadcrumbs plugin integration before page content. | Only when retaining the parent breadcrumbs. | Add content around or replace the breadcrumb region. |
 | `content` | `templates/partials/base.html.twig`, `templates/default.html.twig`, `templates/error.html.twig`, `templates/collection.html.twig` | Renders content defined by the current page template. | Only when extending that page type's existing content. | Page-type-dependent full replacement. |
 | `footer` | `templates/partials/base.html.twig` | Renders the document footer through the public footer partial. | Only when retaining the parent footer. | Full replacement of the footer region. |
@@ -1165,7 +1260,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.9.0.
+are not part of the stable public Twig API for Basalt 0.10.0.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -1174,6 +1269,15 @@ full replacement must still provide an equivalent link to `#main-content`.
 A child that replaces the public `main` block must preserve both
 `id="main-content"` and `tabindex="-1"` on its main content target. The skip link
 depends on this contract to move navigation past the site header.
+
+The base document shell does not wrap the `content` block in a global
+`.container`. The default, collection and error page templates add their own
+containers, while the breadcrumbs region has a separate container. A child
+template that replaces `content` is responsible for choosing its container
+strategy: it can add its own Bootstrap container, use the Section component or
+intentionally leave the content full-width. This allows full-width sections and
+independently contained page regions without escaping a wrapper imposed by the
+document shell.
 
 Basalt sets the document `dir` attribute from Grav's active language metadata.
 This improves document semantics for right-to-left languages but does not claim
@@ -1196,6 +1300,7 @@ The following templates and partials are public override points for child themes
 | `templates/partials/components/navbar/mega/default.html.twig` | Resolves and renders the configured mega-menu content source. |
 | `templates/partials/components/dropdown/dropdown.html.twig` | Renders standard and split Bootstrap Dropdowns with overridable toggle and menu blocks. |
 | `templates/partials/components/offcanvas/offcanvas.html.twig` | Renders an accessible Bootstrap Offcanvas with an overridable body block. |
+| `templates/partials/components/section/section.html.twig` | Renders independently configurable header, primary and secondary section regions. |
 | `templates/partials/components/search/simplesearch.html.twig` | Renders the optional SimpleSearch form. |
 | `templates/partials/components/langswitcher/langswitcher.html.twig` | Extends the optional LangSwitcher logic partial. |
 | `templates/partials/breadcrumbs.html.twig` | Keeps the plugin-compatible Breadcrumbs override path and delegates rendering to the component. |
@@ -1208,6 +1313,7 @@ The following templates and partials are public override points for child themes
 | `templates/partials/elements/image.html.twig` | Renders a direct URL or transformed Grav Media image. |
 | `templates/partials/elements/responsive-image.html.twig` | Renders Grav Media derivatives with `srcset` and `sizes`. |
 | `templates/partials/elements/button.html.twig` | Renders a Bootstrap button or button-styled link with optional state, classes and attributes. |
+| `templates/partials/elements/heading.html.twig` | Renders a validated and escaped heading from level 1 through 6. |
 | `templates/partials/elements/icon.html.twig` | Renders decorative or accessibly labelled Bootstrap Icons. |
 | `templates/partials/elements/badge.html.twig` | Renders a Bootstrap Badge with optional variant and pill styling. |
 | `templates/partials/elements/close-button.html.twig` | Renders an accessible Bootstrap Close Button for component controls. |
@@ -1238,6 +1344,17 @@ It renders the supplied items according to the documented navigation contract
 and the dropdown and icon switches. `dropdown_trigger` selects the global
 `standard` or `split` behavior, while `pages` resolves configured mega-menu
 sources. The internal `navigation.icon()` helper is not part of the public API.
+
+The public HTML attribute macro is defined in
+`templates/macros/attributes.html.twig` with this signature:
+
+```twig
+html_attributes.render(attributes, excluded = [])
+```
+
+It provides the shared escaping and boolean-value behavior used by public
+elements and components. The calling template remains responsible for listing
+attributes it owns in `excluded` so that callers cannot duplicate them.
 
 Use `parent()` when extending asset blocks:
 
@@ -1365,7 +1482,7 @@ basalt/
 │   ├── collection.html.twig
 │   ├── default.html.twig
 │   ├── error.html.twig
-│   ├── macros/navigation.html.twig
+│   ├── macros/{attributes.html.twig,navigation.html.twig}
 │   ├── modular/{mega-menu.html.twig,widget.html.twig}
 │   ├── partials/
 │   │   ├── collection/
@@ -1383,6 +1500,7 @@ basalt/
 │   │   │   ├── offcanvas/
 │   │   │   ├── pagination/
 │   │   │   ├── search/
+│   │   │   ├── section/
 │   │   │   └── tabs/
 │   │   ├── elements/
 │   │   ├── base.html.twig

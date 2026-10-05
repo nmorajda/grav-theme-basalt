@@ -15,6 +15,8 @@ in a child theme or site configuration.
 - `templates/partials/elements/` contains generic UI and media renderers.
 - `templates/partials/components/` contains public Bootstrap component and
   navbar partials.
+- `templates/partials/components/section/` contains the public layout component
+  for independently contained page sections.
 - `templates/partials/components/navbar/mega/` contains public mega-menu
   layouts that child themes can override or extend.
 - `templates/modular/` contains reusable content-source templates for widgets
@@ -29,7 +31,7 @@ in a child theme or site configuration.
 ## Twig and components
 
 - Treat the `@basalt` namespace, documented blocks, public templates, partial
-  paths, component variables, block names and the navigation macro as
+  paths, component variables, block names and public macros as
   child-theme APIs.
 - Prefer small `include` and `embed` compositions over copying complete parent
   templates.
@@ -37,6 +39,10 @@ in a child theme or site configuration.
   plugin adapters should compose generic components.
 - Escape text and attributes according to context. Use `raw` only for trusted
   Grav-rendered content, shortcode output or Media HTML.
+- Reuse `templates/macros/attributes.html.twig` for component attribute maps
+  and exclude every attribute owned by the component.
+- Do not assume that the base `content` block has a Bootstrap container. Page
+  templates and components own their container and full-width behavior.
 - Preserve accessible names, relationships, focus behavior and Bootstrap state
   attributes.
 - Do not require Twig in Content in public examples.

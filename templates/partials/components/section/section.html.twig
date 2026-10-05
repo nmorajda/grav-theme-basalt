@@ -1,7 +1,7 @@
 {#
     Generic responsive Section component.
 
-    Provides an optional full-width header followed by
+    Provides an optional full-row header followed by
     two responsive content columns.
 
     Parameters:
@@ -67,7 +67,7 @@
     {% if classes %}
         class="{{ classes|e('html_attr') }}"
     {% endif %}
-    
+
     {{ html_attributes.render(attributes, ['id', 'class']) }}
 >
     <div class="{{ container_classes|e('html_attr') }}">
