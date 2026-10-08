@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% set document_language = grav.language.getActive ?: grav.config.site.default_lang ?: 'en' %}
 {% set document_direction = language_codes.getOrientation(document_language) ?: 'ltr' %}
+{% set basalt_vendor = json_decode(read_file('theme://dist/basalt-vendor.json') ?: '{}') %}
 <html lang="{{ document_language|e('html_attr') }}" dir="{{ document_direction|e('html_attr') }}" class="no-js">
 <head>
 {% block head %}
@@ -12,12 +13,7 @@
     {% endblock %}
 
     {% block title %}
-        <title>
-            {%- if header.title -%}
-                {{ header.title|e }} |
-            {%- endif -%}
-            {{ site.title|e }}
-        </title>
+        <title>{% if header.title %}{{ header.title|e }} | {% endif %}{{ site.title|e }}</title>
     {% endblock %}
 
     {% block canonical %}
@@ -32,7 +28,6 @@
 {% block stylesheets %}
     {% block font_stylesheets %}{% endblock %}
 
-    {% set basalt_vendor = json_decode(read_file('theme://dist/basalt-vendor.json') ?: '{}') %}
     {% if basalt_vendor.css ?? false %}
         {% do assets.addCss('theme://dist/css/basalt-plugins.css', 110) %}
     {% endif %}
@@ -47,7 +42,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    {% set basalt_vendor = json_decode(read_file('theme://dist/basalt-vendor.json') ?: '{}') %}
     {% if basalt_vendor.js ?? false %}
         {% do assets.addJs('theme://dist/js/basalt-plugins.js', {
             group: 'bottom',
@@ -69,7 +63,7 @@
 {% block head_extra %}{% endblock %}
 </head>
 
-<body class="{{ page.header.body_classes|e('html_attr') }}">
+<body{% if page.header.body_classes %} class="{{ page.header.body_classes|e('html_attr') }}"{% endif %}>
 {% block body %}
     {% block skip_links %}
         {% block skip_link %}
