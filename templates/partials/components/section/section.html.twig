@@ -56,9 +56,17 @@
 {% set primary_classes = primary_classes ?? 'col-12 col-lg-6' %}
 {% set secondary_classes = secondary_classes ?? 'col-12 col-lg-6' %}
 
-{% set header_content = block('section_header') %}
-{% set primary_content = block('section_primary') %}
-{% set secondary_content = block('section_secondary') %}
+{% set header_content %}
+    {% block section_header %}{% endblock %}
+{% endset %}
+
+{% set primary_content %}
+    {% block section_primary %}{% endblock %}
+{% endset %}
+
+{% set secondary_content %}
+    {% block section_secondary %}{% endblock %}
+{% endset %}
 
 <section
     {% if id %}

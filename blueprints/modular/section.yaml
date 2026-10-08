@@ -1,0 +1,18 @@
+title: Section
+'@extends': default
+
+form:
+  fields:
+    tabs:
+      fields:
+        content:
+          fields:
+            header.section.id:
+              type: text
+              label: Section ID
+              help: Optional unique HTML ID for the section.
+
+            header.section.classes:
+              type: text
+              label: Section CSS Classes
+              help: Additional CSS classes separated by spaces.

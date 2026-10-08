@@ -1,0 +1,10 @@
+{% embed 'partials/components/section/section.html.twig' with {
+    id: header.section.id ?? null,
+    classes: header.section.classes ?? '',
+    primary_classes: 'col-12',
+    content: content
+} only %}
+    {% block section_primary %}
+        {{ content|raw }}
+    {% endblock %}
+{% endembed %}
