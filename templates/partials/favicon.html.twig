@@ -1,0 +1,47 @@
+{#
+    Favicon links.
+
+    Uses a custom favicon uploaded through Grav Admin.
+    Falls back to the default Basalt icons.
+
+    Child themes can override this partial.
+#}
+
+{% set custom_favicon = (config.theme.favicon.custom ?? {})|first %}
+
+{% if custom_favicon and custom_favicon.url is defined and custom_favicon.url %}
+
+    <link
+        rel="icon"
+        href="{{ custom_favicon.url|e('html_attr') }}"
+        type="image/png"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{{ custom_favicon.url|e('html_attr') }}"
+    >
+
+{% else %}
+
+    <link
+        rel="icon"
+        href="{{ url('theme://images/favicon-32x32.png')|e('html_attr') }}"
+        type="image/png"
+        sizes="32x32"
+    >
+
+    <link
+        rel="icon"
+        href="{{ url('theme://images/favicon-16x16.png')|e('html_attr') }}"
+        type="image/png"
+        sizes="16x16"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{{ url('theme://images/apple-touch-icon.png')|e('html_attr') }}"
+        sizes="180x180"
+    >
+
+{% endif %}

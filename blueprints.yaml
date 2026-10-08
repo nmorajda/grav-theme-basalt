@@ -49,7 +49,22 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
               validate:
                 type: bool
+            favicon_settings:
+              type: section
+              title: Favicon
+              underline: true
 
+              fields:
+                favicon.custom:
+                  type: file
+                  label: Custom Favicon
+                  help: Upload a PNG favicon (recommended 180 x 180 px or larger). Leave empty to use the default Basalt icons.
+                  destination: 'user://images/favicon'
+                  multiple: false
+                  random_name: true
+                  filesize: 1
+                  accept:
+                    - .png
         navbar:
           type: tab
           title: Navbar
