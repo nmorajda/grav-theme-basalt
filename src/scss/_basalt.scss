@@ -2,6 +2,10 @@
 
 @import "bootstrap/scss/functions";
 
+// Basalt theme colors
+
+@import "settings/theme-colors";
+
 // Basalt and Bootstrap variable overrides
 
 @import "settings/variables";
@@ -13,6 +17,10 @@
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
+
+// Basalt utilities
+
+@import "utilities/colors";
 
 // Selected Bootstrap components
 

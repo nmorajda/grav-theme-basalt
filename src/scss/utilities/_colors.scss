@@ -1,0 +1,34 @@
+// Basalt Background Colors
+
+$basalt-subtle-colors: ();
+$basalt-soft-colors: ();
+
+@each $name, $color in $basalt-colors {
+    $basalt-subtle-colors: map-merge(
+        $basalt-subtle-colors,
+        (
+            "#{$name}-subtle": tint-color($color, 80%)
+        )
+    );
+
+    $basalt-soft-colors: map-merge(
+        $basalt-soft-colors,
+        (
+            "#{$name}-soft": tint-color($color, 90.5%)
+        )
+    );
+}
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "basalt-background-color": (
+            property: background-color,
+            class: bg,
+            values: map-merge(
+                map-merge($basalt-colors, $basalt-subtle-colors),
+                $basalt-soft-colors
+            )
+        )
+    )
+);

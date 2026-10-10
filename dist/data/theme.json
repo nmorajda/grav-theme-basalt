@@ -1,0 +1,20 @@
+{
+    "colors": {
+        "sky": "#5db9d9",
+        "blue": "#4278d6",
+        "grape": "#7033f8",
+        "purple": "#8656d9",
+        "violet": "#a48dda",
+        "pink": "#d77fa9",
+        "fuchsia": "#c55bbc",
+        "red": "#d95c6b",
+        "orange": "#df8658",
+        "yellow": "#e3b558",
+        "green": "#399b83",
+        "leaf": "#7dab84",
+        "aqua": "#50a8b0",
+        "navy": "#334158",
+        "ash": "#9297a3",
+        "graphite": "#25252b"
+    }
+}

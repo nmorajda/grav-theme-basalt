@@ -1,0 +1,39 @@
+// Basalt Theme Colors
+
+$sky: #5db9d9 !default;
+$blue: #4278d6 !default;
+$grape: #7033f8 !default;
+$purple: #8656d9 !default;
+$violet: #a48dda !default;
+$pink: #d77fa9 !default;
+$fuchsia: #c55bbc !default;
+$red: #d95c6b !default;
+$orange: #df8658 !default;
+$yellow: #e3b558 !default;
+$green: #399b83 !default;
+$leaf: #7dab84 !default;
+$aqua: #50a8b0 !default;
+$navy: #334158 !default;
+$ash: #9297a3 !default;
+$graphite: #25252b !default;
+
+// Basalt Color Map
+
+$basalt-colors: (
+    "sky": $sky,
+    "blue": $blue,
+    "grape": $grape,
+    "purple": $purple,
+    "violet": $violet,
+    "pink": $pink,
+    "fuchsia": $fuchsia,
+    "red": $red,
+    "orange": $orange,
+    "yellow": $yellow,
+    "green": $green,
+    "leaf": $leaf,
+    "aqua": $aqua,
+    "navy": $navy,
+    "ash": $ash,
+    "graphite": $graphite
+) !default;
