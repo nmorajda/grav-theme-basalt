@@ -1,15 +1,22 @@
+{#
+    Modular Hero component.
+
+    Renders the main Markdown content inside
+    the shared Section component.
+#}
+
 {% embed 'partials/components/section/section.html.twig' with {
     id: header.section.id ?? null,
-    classes: header.section.classes ?? '',
+    classes: header.section.classes ?? 'py-5',
     attributes: header.section.attributes ?? {},
     container_classes: header.section.container_classes ?? 'container',
     row_classes: header.section.row_classes ?? 'row',
-    header_classes: header.section.header_classes ?? 'col-12',
-    primary_classes: header.section.primary_classes ?? 'col-12',
-    secondary_classes: header.section.secondary_classes ?? 'col-12 col-lg-6',
+    primary_classes: header.section.primary_classes ?? 'col-12 col-lg-6',
     content: content
 } only %}
+
     {% block section_primary %}
         {{ content|raw }}
     {% endblock %}
+
 {% endembed %}

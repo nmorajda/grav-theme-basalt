@@ -5,14 +5,91 @@ form:
   fields:
     tabs:
       fields:
-        content:
+        section:
+          type: tab
+          title: Section
           fields:
-            header.section.id:
-              type: text
-              label: Section ID
-              help: Optional unique HTML ID for the section.
 
-            header.section.classes:
-              type: text
-              label: Section CSS Classes
-              help: Additional CSS classes separated by spaces.
+            general:
+              type: section
+              title: General
+              underline: true
+              fields:
+
+                header.section.id:
+                  type: text
+                  label: Section ID
+                  help: Optional unique HTML ID.
+                  placeholder: about
+
+                header.section.classes:
+                  type: text
+                  label: Section CSS Classes
+                  help: Additional Bootstrap or custom CSS classes.
+                  placeholder: py-5 bg-light
+
+            layout:
+              type: section
+              title: Layout
+              underline: true
+              fields:
+
+                header.section.container_classes:
+                  type: select
+                  label: Container Width
+                  help: Bootstrap container width.
+                  default: container
+                  options:
+                    container: Default
+                    container-fluid: Full Width
+                    container-sm: Small
+                    container-md: Medium
+                    container-lg: Large
+                    container-xl: Extra Large
+                    container-xxl: Extra Extra Large
+
+                header.section.row_classes:
+                  type: text
+                  label: Row CSS Classes
+                  help: Bootstrap grid row classes.
+                  default: row
+                  placeholder: row g-4 align-items-center
+
+            columns:
+              type: section
+              title: Columns
+              underline: true
+              fields:
+
+                header.section.header_classes:
+                  type: text
+                  label: Header Column Classes
+                  help: Classes for the optional full-width section header.
+                  default: col-12
+
+                header.section.primary_classes:
+                  type: text
+                  label: Primary Column Classes
+                  help: Bootstrap grid classes for the main content.
+                  default: col-12
+                  placeholder: col-12 col-lg-6
+
+                header.section.secondary_classes:
+                  type: text
+                  label: Secondary Column Classes
+                  help: Bootstrap grid classes for the optional secondary content.
+                  default: col-12 col-lg-6
+                  placeholder: col-12 col-lg-6
+
+            advanced:
+              type: section
+              title: Advanced
+              underline: true
+              fields:
+
+                header.section.attributes:
+                  type: array
+                  label: Additional HTML Attributes
+                  help: Optional attributes such as aria-label or data-*.
+                  placeholder_key: Attribute name
+                  placeholder_value: Attribute value
