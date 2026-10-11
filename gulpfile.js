@@ -72,28 +72,53 @@ function stylesTask() {
 
 async function manifestTask() {
     const source = `
+        @import "bootstrap/scss/functions";
         @import "settings/theme-colors";
+        @import "settings/variables";
+        @import "settings/gradients";
 
         :root {
             @each $name, $color in $basalt-colors {
-                --basalt-#{$name}: #{$color};
+                --basalt-color-#{$name}: #{$color};
+            }
+
+            @each $name, $gradient in $basalt-gradients {
+                --basalt-gradient-#{$name}: #{$gradient};
             }
         }
     `;
 
     const result = sass.compileString(source, {
-        loadPaths: [path.join(__dirname, "src/scss")],
+        loadPaths: [
+            path.join(__dirname, "src/scss"),
+            path.join(__dirname, "node_modules")
+        ],
         silenceDeprecations: ["import"]
     });
 
     const colors = {};
+    const gradients = {};
 
-    for (const match of result.css.matchAll(/--basalt-([\w-]+):\s*([^;]+);/g)) {
+    // Extract colors
+    for (const match of result.css.matchAll(
+        /--basalt-color-([\w-]+):\s*([^;]+);/g
+    )) {
         colors[match[1]] = match[2].trim();
+    }
+
+    // Extract gradients
+    for (const match of result.css.matchAll(
+        /--basalt-gradient-([\w-]+):\s*([^;]+);/g
+    )) {
+        gradients[match[1]] = match[2].trim();
     }
 
     if (Object.keys(colors).length === 0) {
         throw new Error("Basalt color palette is empty.");
+    }
+
+    if (Object.keys(gradients).length === 0) {
+        throw new Error("Basalt gradient palette is empty.");
     }
 
     const output = path.join(paths.output, "data", "theme.json");
@@ -102,7 +127,7 @@ async function manifestTask() {
 
     await writeFile(
         output,
-        JSON.stringify({ colors }, null, 4) + "\n"
+        JSON.stringify({ colors, gradients }, null, 4) + "\n"
     );
 }
 
