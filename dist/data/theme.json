@@ -1,0 +1,34 @@
+{
+    "colors": {
+        "sky": "#5db9d9",
+        "blue": "#4278d6",
+        "grape": "#7033f8",
+        "purple": "#8656d9",
+        "violet": "#a48dda",
+        "pink": "#d77fa9",
+        "fuchsia": "#c55bbc",
+        "red": "#d95c6b",
+        "orange": "#df8658",
+        "yellow": "#e3b558",
+        "green": "#399b83",
+        "leaf": "#7dab84",
+        "aqua": "#50a8b0",
+        "navy": "#334158",
+        "ash": "#9297a3",
+        "graphite": "#25252b"
+    },
+    "gradients": {
+        "1": "linear-gradient(135deg, #7033f8, #8656d9)",
+        "2": "linear-gradient(135deg, #5db9d9, #4278d6)",
+        "3": "linear-gradient(135deg, #50a8b0, #399b83)",
+        "4": "linear-gradient(135deg, #df8658, #d77fa9)",
+        "5": "linear-gradient(135deg, #334158, #7033f8)",
+        "6": "linear-gradient(135deg, #25252b, #334158)",
+        "primary": "linear-gradient(135deg, #7033f8, rgb(55.137254902%, 36%, 97.8039215686%))",
+        "primary-subtle": "linear-gradient(135deg, rgb(85.9803921569%, 80%, 99.3137254902%), rgb(91.5882352941%, 88%, 99.5882352941%))",
+        "primary-soft": "linear-gradient(135deg, rgb(94.3921568627%, 92%, 99.7254901961%), rgb(97.1960784314%, 96%, 99.862745098%))",
+        "secondary": "linear-gradient(135deg, #25252b, rgb(31.6078431373%, 31.6078431373%, 33.4901960784%))",
+        "secondary-subtle": "linear-gradient(135deg, rgb(78.6274509804%, 78.6274509804%, 79.2156862745%), rgb(87.1764705882%, 87.1764705882%, 87.5294117647%))",
+        "secondary-soft": "linear-gradient(135deg, rgb(91.4509803922%, 91.4509803922%, 91.6862745098%), rgb(95.7254901961%, 95.7254901961%, 95.8431372549%))"
+    }
+}

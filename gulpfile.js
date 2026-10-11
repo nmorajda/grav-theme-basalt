@@ -1,7 +1,8 @@
 const path = require("node:path");
 const { mkdir, readFile, readdir, rm, writeFile } = require("node:fs/promises");
 const { src, dest, watch, series, parallel } = require("gulp");
-const gulpSass = require("gulp-sass")(require("sass"));
+const sass = require("sass");
+const gulpSass = require("gulp-sass")(sass);
 const postcss = require("gulp-postcss");
 const autoprefixer = require("autoprefixer");
 const cleanCSS = require("gulp-clean-css");
@@ -69,6 +70,67 @@ function stylesTask() {
         .pipe(dest(paths.styles.destination, destinationOptions));
 }
 
+async function manifestTask() {
+    const source = `
+        @import "bootstrap/scss/functions";
+        @import "settings/theme-colors";
+        @import "settings/variables";
+        @import "settings/gradients";
+
+        :root {
+            @each $name, $color in $basalt-colors {
+                --basalt-color-#{$name}: #{$color};
+            }
+
+            @each $name, $gradient in $basalt-gradients {
+                --basalt-gradient-#{$name}: #{$gradient};
+            }
+        }
+    `;
+
+    const result = sass.compileString(source, {
+        loadPaths: [
+            path.join(__dirname, "src/scss"),
+            path.join(__dirname, "node_modules")
+        ],
+        silenceDeprecations: ["import"]
+    });
+
+    const colors = {};
+    const gradients = {};
+
+    // Extract colors
+    for (const match of result.css.matchAll(
+        /--basalt-color-([\w-]+):\s*([^;]+);/g
+    )) {
+        colors[match[1]] = match[2].trim();
+    }
+
+    // Extract gradients
+    for (const match of result.css.matchAll(
+        /--basalt-gradient-([\w-]+):\s*([^;]+);/g
+    )) {
+        gradients[match[1]] = match[2].trim();
+    }
+
+    if (Object.keys(colors).length === 0) {
+        throw new Error("Basalt color palette is empty.");
+    }
+
+    if (Object.keys(gradients).length === 0) {
+        throw new Error("Basalt gradient palette is empty.");
+    }
+
+    const output = path.join(paths.output, "data", "theme.json");
+
+    await mkdir(path.dirname(output), { recursive: true });
+
+    await writeFile(
+        output,
+        JSON.stringify({ colors, gradients }, null, 4) + "\n"
+    );
+}
+
 function fontsTask() {
     return src(paths.fonts.source, {
         encoding: false
@@ -134,7 +196,7 @@ async function vendorTask() {
 }
 
 function watchTask() {
-    watch(paths.styles.watch, stylesTask);
+    watch(paths.styles.watch, parallel(stylesTask, manifestTask));
     watch(paths.fonts.watch, fontsTask);
     watch(paths.scripts.watch, scriptsTask);
     watch("src/vendor/**/*.{css,js}", vendorTask);
@@ -142,6 +204,7 @@ function watchTask() {
 
 const compileTask = parallel(
     stylesTask,
+    manifestTask,
     fontsTask,
     scriptsTask,
     vendorTask
@@ -155,3 +218,4 @@ exports.vendor = vendorTask;
 exports.watch = watchTask;
 exports.build = series(setProduction, cleanTask, compileTask);
 exports.default = series(cleanTask, compileTask, watchTask);
+exports.manifest = manifestTask;

@@ -1,0 +1,100 @@
+// Basalt Background Colors
+
+$basalt-subtle-colors: ();
+$basalt-soft-colors: ();
+
+@each $name, $color in $basalt-colors {
+    $basalt-subtle-colors: map-merge(
+        $basalt-subtle-colors,
+        (
+            "#{$name}-subtle": tint-color($color, 80%)
+        )
+    );
+
+    $basalt-soft-colors: map-merge(
+        $basalt-soft-colors,
+        (
+            "#{$name}-soft": tint-color($color, 90.5%)
+        )
+    );
+}
+
+// Bootstrap semantic soft backgrounds
+
+@each $name, $color in $theme-colors {
+    $basalt-soft-colors: map-merge(
+        $basalt-soft-colors,
+        (
+            "#{$name}-soft": tint-color($color, 90.5%)
+        )
+    );
+}
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "basalt-background-color": (
+            property: background-color,
+            class: bg,
+            values: map-merge(
+                map-merge($basalt-colors, $basalt-subtle-colors),
+                $basalt-soft-colors
+            )
+        )
+    )
+);
+
+// Basalt Text Colors
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "basalt-text-color": (
+            property: color,
+            class: text,
+            values: $basalt-colors
+        )
+    )
+);
+
+// Basalt Background Gradients
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "basalt-background-gradient": (
+            property: background-image,
+            class: bg-gradient,
+            values: $basalt-gradients
+        )
+    )
+);
+
+// Basalt Gradient Utilities
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "basalt-gradient": (
+            property: background-image,
+            class: gradient,
+            values: $basalt-gradients
+        )
+    )
+);
+
+// Gradient Text
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+@media (forced-colors: active) {
+    .text-gradient {
+        color: CanvasText;
+        -webkit-text-fill-color: CanvasText;
+    }
+}

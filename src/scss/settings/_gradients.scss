@@ -1,0 +1,66 @@
+// Basalt Gradients
+
+// Decorative Gradients
+
+$basalt-gradient-1: linear-gradient(135deg, $grape, $purple) !default;
+$basalt-gradient-2: linear-gradient(135deg, $sky, $blue) !default;
+$basalt-gradient-3: linear-gradient(135deg, $aqua, $green) !default;
+$basalt-gradient-4: linear-gradient(135deg, $orange, $pink) !default;
+$basalt-gradient-5: linear-gradient(135deg, $navy, $grape) !default;
+$basalt-gradient-6: linear-gradient(135deg, $graphite, $navy) !default;
+
+// Semantic Gradients
+
+$basalt-gradient-primary: linear-gradient(
+    135deg,
+    $primary,
+    tint-color($primary, 20%)
+) !default;
+
+$basalt-gradient-primary-subtle: linear-gradient(
+    135deg,
+    tint-color($primary, 75%),
+    tint-color($primary, 85%)
+) !default;
+
+$basalt-gradient-primary-soft: linear-gradient(
+    135deg,
+    tint-color($primary, 90%),
+    tint-color($primary, 95%)
+) !default;
+
+$basalt-gradient-secondary: linear-gradient(
+    135deg,
+    $secondary,
+    tint-color($secondary, 20%)
+) !default;
+
+$basalt-gradient-secondary-subtle: linear-gradient(
+    135deg,
+    tint-color($secondary, 75%),
+    tint-color($secondary, 85%)
+) !default;
+
+$basalt-gradient-secondary-soft: linear-gradient(
+    135deg,
+    tint-color($secondary, 90%),
+    tint-color($secondary, 95%)
+) !default;
+
+// Gradient Map
+
+$basalt-gradients: (
+    "1": $basalt-gradient-1,
+    "2": $basalt-gradient-2,
+    "3": $basalt-gradient-3,
+    "4": $basalt-gradient-4,
+    "5": $basalt-gradient-5,
+    "6": $basalt-gradient-6,
+    "primary": $basalt-gradient-primary,
+    "primary-subtle": $basalt-gradient-primary-subtle,
+    "primary-soft": $basalt-gradient-primary-soft,
+    "secondary": $basalt-gradient-secondary,
+    "secondary-subtle": $basalt-gradient-secondary-subtle,
+    "secondary-soft": $basalt-gradient-secondary-soft
+) !default;
+
