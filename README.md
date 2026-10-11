@@ -17,6 +17,7 @@ complete Bootstrap CSS and JavaScript bundles.
 - accessible document shell, skip links, breadcrumbs and pagination
 - responsive navbar with standard, split and content-driven mega dropdowns
 - optional SimpleSearch, LangSwitcher and navbar CTA integrations
+- modular page composition with reusable Hero and Section modules
 - generic collection template with item and card variants
 - responsive collection grids with one to four columns
 - reusable image and responsive-image renderers using Grav Media
@@ -24,8 +25,11 @@ complete Bootstrap CSS and JavaScript bundles.
 - reusable Card, Section, Accordion, Alert, Dropdown, Modal, Offcanvas, Carousel and Tabs components
 - Shortcode Core handlers for Accordion, Alert, Badge, Button, Carousel, Icon, Modal and Tabs
 - local Bootstrap Icons and font extension points
+- configurable custom favicon with built-in PNG fallbacks
+- extensible Sass color palette, semantic colors and gradient utilities
 - Gulp, Sass and esbuild development and production tasks
 - optional manifest-controlled vendor CSS and JavaScript bundles
+- generated color and gradient data in `dist/data/theme.json`
 - deterministic production assets committed in `dist/`
 - GitHub Actions build validation
 
@@ -99,11 +103,15 @@ written to:
 
 ```text
 dist/css/style.css
+dist/css/icons.css
 dist/js/script.js
+dist/data/theme.json
 ```
 
-The build also writes `dist/basalt-vendor.json`, which records whether optional
-vendor CSS and JavaScript bundles exist.
+The build also copies local fonts and writes `dist/basalt-vendor.json`, which
+records whether optional vendor CSS and JavaScript bundles exist. Changes under
+`src/scss/` rebuild both the stylesheets and the theme data manifest during
+`npm start`.
 
 ## Optional vendor assets
 
@@ -156,8 +164,9 @@ in the generated bundles and keeps them compatible with the Grav CSS and
 JavaScript pipelines.
 
 All files in `dist` are generated outputs and must not be edited manually. Use
-`npx gulp vendor` to rebuild only the optional bundles and manifest, or
-`npm run build` for the complete production build.
+`npx gulp vendor` to rebuild only the optional bundles and vendor manifest,
+`npx gulp manifest` to rebuild only the theme data manifest, or `npm run build`
+for the complete production build.
 
 ## Modular Bootstrap SCSS
 
@@ -192,6 +201,98 @@ src/scss/theme/
 src/scss/tools/
 src/scss/utilities/
 ```
+
+## Color system
+
+Basalt defines its source palette in
+`src/scss/settings/_theme-colors.scss`. Every palette variable and the
+`$basalt-colors` map use `!default`, so a full child-theme compilation can
+replace individual values or the complete map before importing Basalt.
+
+| Name | Default |
+| --- | --- |
+| `sky` | `#5db9d9` |
+| `blue` | `#4278d6` |
+| `grape` | `#7033f8` |
+| `purple` | `#8656d9` |
+| `violet` | `#a48dda` |
+| `pink` | `#d77fa9` |
+| `fuchsia` | `#c55bbc` |
+| `red` | `#d95c6b` |
+| `orange` | `#df8658` |
+| `yellow` | `#e3b558` |
+| `green` | `#399b83` |
+| `leaf` | `#7dab84` |
+| `aqua` | `#50a8b0` |
+| `navy` | `#334158` |
+| `ash` | `#9297a3` |
+| `graphite` | `#25252b` |
+
+Basalt maps the Bootstrap semantic variables before Bootstrap creates its
+maps: `primary` uses `grape`, `secondary` uses `graphite`, `success` uses
+`green`, `danger` uses `red`, `warning` uses `yellow` and `info` uses `sky`.
+These defaults affect Bootstrap components and semantic utilities throughout
+the compiled stylesheet.
+
+The generated utilities include:
+
+| Pattern | Purpose |
+| --- | --- |
+| `.bg-{color}` | Palette background color. |
+| `.text-{color}` | Palette text color. |
+| `.bg-{color}-subtle` | Palette color tinted by 80%. |
+| `.bg-{color}-soft` | Palette color tinted by 90.5%. |
+| `.bg-{theme-color}-soft` | Soft background for each Bootstrap theme color. |
+| `.bg-gradient-{key}` or `.gradient-{key}` | Decorative or semantic background gradient. |
+| `.text-gradient` | Clips an applied background gradient to text. |
+
+`color` accepts every palette name in the table. Bootstrap continues to
+provide its own semantic classes, including `.bg-primary` and
+`.bg-primary-subtle`. Gradient keys are `1` through `6`, `primary`,
+`primary-subtle`, `primary-soft`, `secondary`, `secondary-subtle` and
+`secondary-soft`.
+
+```html
+<section class="bg-grape-subtle text-graphite">...</section>
+<section class="bg-primary-soft">...</section>
+<h2 class="gradient-1 text-gradient">Gradient heading</h2>
+```
+
+The `.text-gradient` utility falls back to the system `CanvasText` color in
+forced-colors mode. Color utilities do not select a contrasting foreground
+automatically; templates remain responsible for accessible color contrast.
+
+All color and gradient variables use `!default`. A child theme that compiles a
+complete Basalt stylesheet can set overrides before importing `_basalt.scss`:
+
+```scss
+$grape: #6f42c1;
+$primary: #6f42c1;
+$basalt-gradient-1: linear-gradient(135deg, #6f42c1, #d63384);
+
+@import "basalt";
+```
+
+An additive child stylesheet cannot change Sass that has already been compiled
+into the parent stylesheet; use CSS overrides there instead.
+
+### Theme data manifest
+
+The `manifest` Gulp task generates the parent theme manifest at:
+
+```text
+dist/data/theme.json
+```
+
+The theme manifest contains the default Basalt color palette and gradient
+definitions generated during the parent theme build. Its `colors` object covers
+the base palette, while its `gradients` object covers all decorative and
+semantic gradients. It does not duplicate the derived subtle and soft color
+utilities. `npm run build` and the SCSS watcher both regenerate it from the same
+parent-theme Sass sources as the stylesheet.
+
+Child theme Sass overrides do not automatically update the parent theme
+manifest, even when using compiled CSS mode.
 
 ## Typography and fonts
 
@@ -613,6 +714,27 @@ process:
 CTA content is trusted site-authored markup and is rendered with `raw`. Keep the
 link text meaningful and preserve visible keyboard focus styles.
 
+## Favicon
+
+The General tab in Grav Admin accepts one custom PNG under `favicon.custom`.
+Uploads are limited to 1 MB, stored below `user/images/favicon` with a random
+filename and should be at least 180 × 180 pixels. The public
+`templates/partials/favicon.html.twig` partial uses the uploaded image for the
+standard icon and Apple touch icon links.
+
+When no custom image is configured, the partial renders the three assets
+included with Basalt:
+
+```text
+images/favicon-32x32.png
+images/favicon-16x16.png
+images/apple-touch-icon.png
+```
+
+The existing public `favicon` block in `templates/partials/base.html.twig`
+includes this partial. A child theme can override the partial to supply another
+favicon strategy without replacing the complete document head.
+
 ## Optional breadcrumbs
 
 Basalt can render breadcrumbs from the official Grav Breadcrumbs plugin without
@@ -680,6 +802,80 @@ The adapter defaults remain compatible with the official plugin partial:
 `page.url` supplies `base_url`, and `page.collection.params.pagination` supplies
 `pagination`. Pagination remains optional and is not listed as a dependency in
 `blueprints.yaml`.
+
+## Modular pages
+
+The `templates/modular.html.twig` page template renders the processed content
+of each module returned by `page.collection()` in collection order. Configure
+the parent page explicitly and store modules in underscore-prefixed child
+directories:
+
+```text
+user/pages/01.home/
+├── modular.md
+├── _hero/hero.md
+└── _content/section.md
+```
+
+```yaml
+---
+title: Home
+content:
+  items: '@self.modular'
+  order:
+    by: default
+    dir: asc
+---
+```
+
+Both shipped modules compose the public Section component. A `hero.md` module
+renders its Markdown content in `section_primary` and defaults to `py-5` on the
+section and `col-12 col-lg-6` on the primary column:
+
+```markdown
+---
+title: Hero
+section:
+  id: introduction
+  classes: py-5 bg-gradient-1 text-white
+  container_classes: container
+  row_classes: row g-4 align-items-center
+  primary_classes: col-12 col-lg-7
+  attributes:
+    aria-label: Introduction
+---
+
+# Build with Basalt
+
+Reusable Grav components with a project-specific child theme.
+```
+
+A `section.md` module uses the same `section` frontmatter namespace and defaults
+to a full-width primary grid column inside a standard Bootstrap container. Its
+Admin blueprint is `blueprints/modular/section.yaml` and exposes `id`, section
+classes, additional attributes and the container, row and column class fields.
+
+```markdown
+---
+title: Services
+section:
+  id: services
+  classes: py-5 bg-sky-soft
+  container_classes: container-xl
+  row_classes: row g-4
+  primary_classes: col-12
+---
+
+## Services
+
+Module content belongs here.
+```
+
+The stock Hero and Section module templates place their processed content only
+in `section_primary`. The `section_header` and `section_secondary` blocks remain
+available in the shared component for child templates that override or extend
+the module composition. Module content is trusted, processed Grav output and is
+rendered with `raw` by the page and module templates.
 
 ## Collection template
 
@@ -1212,7 +1408,7 @@ dependencies:
   - name: grav
     version: '>=2.0.0'
   - name: basalt
-    version: '>=0.10.0'
+    version: '>=0.11.0'
 ```
 
 ### Extending parent templates
@@ -1227,12 +1423,12 @@ template can therefore explicitly extend the parent:
 ### Public Twig API
 
 The following blocks are the stable public Twig API for child themes in Basalt
-0.10.0:
+0.11.0:
 
 | Block | Defined in | Purpose | Call `parent()`? | Override model |
 | --- | --- | --- | --- | --- |
 | `title` | `templates/partials/base.html.twig` | Renders the complete document title element. | No when replacing the title. | Full replacement. |
-| `favicon` | `templates/partials/base.html.twig` | Renders the default PNG favicon and Apple touch icon links. | No when replacing the favicon set. | Full replacement, or extension with `parent()` when retaining the defaults. |
+| `favicon` | `templates/partials/base.html.twig` | Renders the configured custom favicon or the default PNG and Apple touch icon links through the public favicon partial. | No when replacing the favicon set. | Full replacement, or extension with `parent()` when retaining the defaults. |
 | `head_extra` | `templates/partials/base.html.twig` | Provides an empty extension point at the end of the document head. | Not required; the parent block is empty. | Add child-specific head elements. |
 | `font_stylesheets` | `templates/partials/base.html.twig` | Registers font stylesheets before the main theme stylesheet. | Not required; the parent block is empty. | Add font assets. |
 | `theme_stylesheet` | `templates/partials/base.html.twig` | Selects and registers one main theme stylesheet. | No; the child selects the replacement stylesheet. | Full replacement of the main stylesheet selection. |
@@ -1260,7 +1456,7 @@ cases.
 
 Other blocks, including `head`, `metadata`, `canonical`, `assets`, `body` and
 `skip_link`, can technically be overridden. They are implementation details and
-are not part of the stable public Twig API for Basalt 0.10.0.
+are not part of the stable public Twig API for Basalt 0.11.0.
 
 A child can extend the public `skip_links` block and call `parent()` to retain
 the default link to `#main-content` while adding links to other landmarks. A
@@ -1288,8 +1484,12 @@ The following templates and partials are public override points for child themes
 | Template or partial | Responsibility |
 | --- | --- |
 | `templates/collection.html.twig` | Renders configurable collection grids, variants, empty state and pagination. |
+| `templates/modular.html.twig` | Renders the ordered processed content of a modular page collection. |
+| `templates/modular/hero.html.twig` | Composes trusted Hero module content with the public Section component. |
+| `templates/modular/section.html.twig` | Composes trusted Section module content with the public Section component. |
 | `templates/modular/mega-menu.html.twig` | Renders trusted content for a modular mega-menu source. |
 | `templates/modular/widget.html.twig` | Renders trusted reusable widget page content. |
+| `templates/partials/favicon.html.twig` | Renders the configured custom favicon or the built-in fallback icon set. |
 | `templates/partials/header.html.twig` | Renders the site header and includes the navigation entry point. |
 | `templates/partials/navigation.html.twig` | Enables or disables the complete navbar component. |
 | `templates/partials/components/navbar/navbar.html.twig` | Composes brand, toggler, menu, search, CTA and language switcher. |
@@ -1440,9 +1640,11 @@ version declared in its blueprint.
 ```text
 basalt/
 ├── .github/workflows/ci.yml
+├── blueprints/modular/section.yaml
 ├── dist/
 │   ├── basalt-vendor.json
 │   ├── css/{icons.css,style.css}
+│   ├── data/theme.json
 │   ├── fonts/
 │   └── js/script.js
 ├── images/
@@ -1469,10 +1671,10 @@ basalt/
 │   ├── scss/
 │   │   ├── base/
 │   │   ├── layout/
-│   │   ├── settings/
+│   │   ├── settings/{_gradients.scss,_theme-colors.scss,_variables.scss}
 │   │   ├── theme/
 │   │   ├── tools/
-│   │   ├── utilities/
+│   │   ├── utilities/_colors.scss
 │   │   ├── _basalt.scss
 │   │   ├── _bootstrap-components.scss
 │   │   ├── icons.scss
@@ -1483,7 +1685,8 @@ basalt/
 │   ├── default.html.twig
 │   ├── error.html.twig
 │   ├── macros/{attributes.html.twig,navigation.html.twig}
-│   ├── modular/{mega-menu.html.twig,widget.html.twig}
+│   ├── modular.html.twig
+│   ├── modular/{hero.html.twig,mega-menu.html.twig,section.html.twig,widget.html.twig}
 │   ├── partials/
 │   │   ├── collection/
 │   │   ├── components/
@@ -1505,6 +1708,7 @@ basalt/
 │   │   ├── elements/
 │   │   ├── base.html.twig
 │   │   ├── breadcrumbs.html.twig
+│   │   ├── favicon.html.twig
 │   │   ├── footer.html.twig
 │   │   ├── header.html.twig
 │   │   ├── navigation.html.twig
@@ -1529,7 +1733,9 @@ the theme to be installed and used without running the Node.js build process.
 
 Optional `basalt-plugins.css` and `basalt-plugins.js` files appear in `dist`
 only when their source directories contain non-empty matching files. The
-`basalt-vendor.json` manifest is always generated.
+`basalt-vendor.json` manifest is always generated. The tracked
+`dist/data/theme.json` manifest is also generated on every Basalt parent-theme
+production build from Basalt's source Sass color and gradient configuration.
 
 Source maps are development-only and are excluded from Git.
 

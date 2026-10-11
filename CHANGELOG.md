@@ -7,6 +7,27 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-11
+
+### Added
+
+- Modular page template with reusable Hero and Section module templates and a Grav Admin blueprint for Section layout settings.
+- Configurable custom PNG favicon with a public Twig partial and built-in favicon fallbacks.
+- Basalt Sass palette with named color variables, background and text utilities, derived subtle and soft backgrounds and child-overridable maps.
+- Decorative and semantic background gradients plus a gradient-text utility with a forced-colors fallback.
+- Generated `dist/data/theme.json` manifest containing the default Basalt color and gradient maps from the parent theme build.
+
+### Changed
+
+- Mapped Bootstrap semantic colors to the Basalt palette and made the relevant variables and gradient definitions overridable before compiling the theme.
+- Extended the Gulp build and SCSS watcher to generate the theme data manifest from the same Sass sources as the stylesheet.
+- Changed Section block capture for Twig embed composition and exposed its existing container, row, column and custom-attribute controls through the modular Section configuration.
+- Simplified the base document template by reading the vendor manifest once, omitting empty body classes and delegating favicon output to its public partial.
+
+### Fixed
+
+- Removed unwanted whitespace around rendered Badge labels.
+
 ## [0.10.0] - 2026-10-05
 
 ### Added
@@ -188,7 +209,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Node.js and npm version requirements.
 - Initial Basalt branding and theme preview assets.
 
-[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/nmorajda/grav-theme-basalt/compare/v0.8.2...v0.8.3
