@@ -93,6 +93,7 @@ async function manifestTask() {
             path.join(__dirname, "src/scss"),
             path.join(__dirname, "node_modules")
         ],
+        quietDeps: true,
         silenceDeprecations: ["import"]
     });
 
