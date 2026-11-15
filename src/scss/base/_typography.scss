@@ -1,0 +1,33 @@
+// Basalt typography.
+// Defines global styles for headings, paragraphs, lists, and blockquotes.
+// Extends Bootstrap typography while preserving its core conventions.
+
+// Headings
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6,
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6 {
+    font-family: var(--basalt-font-family-headings);
+}
+
+// Blockquote
+
+blockquote {
+    margin-block-end: 1.5rem;
+    padding-block: 0.25rem;
+    padding-inline-start: 1rem;
+    border-inline-start: 0.1875rem solid var(--bs-primary);
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}

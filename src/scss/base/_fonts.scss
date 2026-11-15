@@ -1,17 +1,9 @@
-// Basalt typography hooks.
-// Child themes can override these custom properties.
+// Basalt font configuration.
+// Defines CSS custom properties for body and heading font families.
+// Child themes can override these properties without recompiling Basalt.
 
 :root {
     --basalt-font-family-base: var(--bs-font-sans-serif);
     --basalt-font-family-headings: var(--basalt-font-family-base);
     --bs-body-font-family: var(--basalt-font-family-base);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: var(--basalt-font-family-headings);
 }
